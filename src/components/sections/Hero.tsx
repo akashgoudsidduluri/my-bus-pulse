@@ -1,9 +1,16 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Rocket, ArrowRight } from "lucide-react";
-import heroImage from "@/assets/safari-hero-image.jpg";
+
+const mockBuses = [
+  { id: 1, name: "Route 45A - City Center", eta: "5 min", seats: 7, stop: "Punjagutta", lat: 17.4239, lng: 78.4521 },
+  { id: 2, name: "Route 23B - Airport", eta: "12 min", seats: 3, stop: "Begumpet", lat: 17.4486, lng: 78.4712 }
+];
 
 export function Hero() {
+  const navigate = useNavigate();
+
   return (
     <section className="min-h-screen flex items-center pt-16 px-4 sm:px-6 lg:px-8 bg-gradient-hero overflow-hidden">
       <div className="container mx-auto">
@@ -42,37 +49,42 @@ export function Hero() {
           <div className="relative mt-8 lg:mt-0">
             <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto">
               <div className="absolute inset-0 bg-gradient-primary rounded-3xl blur-3xl opacity-20 scale-105"></div>
-              <div className="relative bg-gradient-card rounded-3xl p-4 sm:p-6 lg:p-8 shadow-safari-large">
-                <img 
-                  src={heroImage} 
-                  alt="Safari app interface showing real-time bus tracking" 
-                  className="w-full h-auto rounded-2xl shadow-safari-medium"
-                />
+              <div className="relative bg-background/95 backdrop-blur-sm rounded-3xl p-4 sm:p-6 lg:p-8 shadow-safari-large border border-border">
+                <div className="flex items-center justify-between mb-4 sm:mb-6">
+                  <h3 className="font-semibold text-safari-blue text-lg sm:text-xl">Safari</h3>
+                  <span className="text-2xl sm:text-3xl">🌐</span>
+                </div>
                 
-                {/* App mockup overlay */}
-                <div className="absolute top-6 sm:top-8 lg:top-12 left-6 sm:left-8 lg:left-12 right-6 sm:right-8 lg:right-12 bg-background/95 backdrop-blur-sm rounded-2xl p-3 sm:p-4 shadow-safari-soft">
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <h3 className="font-semibold text-safari-blue text-sm sm:text-base">Safari</h3>
-                    <span className="text-xl sm:text-2xl">🌐</span>
-                  </div>
-                  
-                  <div className="space-y-2 sm:space-y-3">
-                    <div className="bg-gradient-card rounded-lg p-2 sm:p-3 border-l-4 border-safari-green">
-                      <div className="font-medium text-xs sm:text-sm">Route 45A - City Center</div>
-                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                        <span>🚌 Arriving in 5 min</span>
-                        <span className="text-safari-green">👥 Moderate</span>
-                      </div>
-                    </div>
-                    
-                    <div className="bg-gradient-card rounded-lg p-2 sm:p-3 border-l-4 border-safari-blue">
-                      <div className="font-medium text-xs sm:text-sm">Route 23B - Airport</div>
-                      <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                        <span>🚌 Arriving in 12 min</span>
-                        <span className="text-safari-green">👥 Light</span>
-                      </div>
-                    </div>
-                  </div>
+                <div className="space-y-3 sm:space-y-4">
+                  {mockBuses.map((bus) => (
+                    <Card
+                      key={bus.id}
+                      className="cursor-pointer hover:bg-muted/50 transition-all duration-300 border-l-4 border-l-safari-blue"
+                      onClick={() => navigate(`/bus/${bus.id}`, { state: bus })}
+                    >
+                      <CardContent className="p-3 sm:p-4">
+                        <div className="font-medium text-sm sm:text-base mb-2">{bus.name}</div>
+                        <div className="flex justify-between items-center text-xs sm:text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            🚌 Arriving in {bus.eta}
+                          </span>
+                          <span className="flex items-center gap-1 text-safari-green">
+                            👥 {bus.seats < 5 ? 'Light' : 'Moderate'}
+                          </span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                
+                <div className="mt-4 sm:mt-6">
+                  <Button 
+                    onClick={() => navigate('/buses')}
+                    variant="outline" 
+                    className="w-full text-sm sm:text-base"
+                  >
+                    View All Buses
+                  </Button>
                 </div>
               </div>
             </div>
