@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import busIcon from "@/assets/bus-icon.png";
 
 export default function BusDetail() {
   const navigate = useNavigate();
@@ -13,12 +14,20 @@ export default function BusDetail() {
   useEffect(() => {
     if (!bus) return;
 
+    // Create custom bus icon
+    const customBusIcon = L.icon({
+      iconUrl: busIcon,
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+      popupAnchor: [0, -16],
+    });
+
     const map = L.map("map").setView([bus.lat, bus.lng], 15);
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution: "&copy; OpenStreetMap contributors",
     }).addTo(map);
 
-    const marker = L.marker([bus.lat, bus.lng]).addTo(map).bindPopup(bus.name).openPopup();
+    const marker = L.marker([bus.lat, bus.lng], { icon: customBusIcon }).addTo(map).bindPopup(bus.name).openPopup();
 
     // Simulate movement every 5 seconds
     const interval = setInterval(() => {
