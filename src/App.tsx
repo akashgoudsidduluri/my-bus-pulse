@@ -9,9 +9,22 @@ import Features from "./pages/Features";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import BusSearch from "./pages/BusSearch";
+import BusDetail from "./pages/BusDetail";
+import Home from "./components/sections/Hero";
 const queryClient = new QueryClient();
-
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/buses" element={<BusSearch />} />
+        <Route path="/bus/:id" element={<BusDetail />} />
+      </Routes>
+    </Router>
+  );
+}
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
