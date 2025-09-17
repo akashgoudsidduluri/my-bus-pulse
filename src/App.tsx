@@ -37,4 +37,9 @@ const App = () => (
           {/* Catch-all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRou
+      </BrowserRouter>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
+
+export default App;
