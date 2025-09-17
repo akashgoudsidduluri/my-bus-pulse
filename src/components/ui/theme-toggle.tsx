@@ -27,7 +27,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={toggleTheme}
-      className="rounded-full transition-navbus hover:shadow-navbus-soft"
+      className="rounded-full transition-NavBus hover:shadow-NavBus-soft"
       aria-label="Toggle theme"
     >
       {theme === "light" ? (
