@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* NavBus Travel Companion Design System - Transport-focused modern design */
+/* navbus Travel Companion Design System - Transport-focused modern design */
 
 @layer base {
   :root {
@@ -35,18 +35,18 @@
     --input: 220 13% 91%;
     --ring: 220 98% 61%;
 
-    /* NavBus-specific design tokens */
-    --NavBus-blue: 220 98% 61%;
-    --NavBus-blue-light: 213 93% 67%;
-    --NavBus-blue-dark: 223 84% 44%;
-    --NavBus-green: 142 76% 36%;
-    --NavBus-green-light: 134 61% 41%;
-    --NavBus-orange: 25 95% 53%;
-    --NavBus-gray: 220 9% 46%;
+    /* navbus-specific design tokens */
+    --navbus-blue: 220 98% 61%;
+    --navbus-blue-light: 213 93% 67%;
+    --navbus-blue-dark: 223 84% 44%;
+    --navbus-green: 142 76% 36%;
+    --navbus-green-light: 134 61% 41%;
+    --navbus-orange: 25 95% 53%;
+    --navbus-gray: 220 9% 46%;
     
     /* Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--NavBus-blue)), hsl(var(--NavBus-blue-light)));
-    --gradient-secondary: linear-gradient(135deg, hsl(var(--NavBus-green)), hsl(var(--NavBus-green-light)));
+    --gradient-primary: linear-gradient(135deg, hsl(var(--navbus-blue)), hsl(var(--navbus-blue-light)));
+    --gradient-secondary: linear-gradient(135deg, hsl(var(--navbus-green)), hsl(var(--navbus-green-light)));
     --gradient-hero: linear-gradient(135deg, hsl(var(--background)) 0%, hsl(220 14% 96%) 100%);
     --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(220 14% 98%));
     
@@ -54,7 +54,7 @@
     --shadow-soft: 0 4px 6px -1px hsl(220 98% 61% / 0.1), 0 2px 4px -1px hsl(220 98% 61% / 0.06);
     --shadow-medium: 0 10px 15px -3px hsl(220 98% 61% / 0.1), 0 4px 6px -2px hsl(220 98% 61% / 0.05);
     --shadow-large: 0 20px 25px -5px hsl(220 98% 61% / 0.1), 0 10px 10px -5px hsl(220 98% 61% / 0.04);
-    --shadow-glow: 0 0 20px hsl(var(--NavBus-blue-light) / 0.3);
+    --shadow-glow: 0 0 20px hsl(var(--navbus-blue-light) / 0.3);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -159,43 +159,43 @@
     background: var(--gradient-card);
   }
   
-  .shadow-NavBus-soft {
+  .shadow-navbus-soft {
     box-shadow: var(--shadow-soft);
   }
   
-  .shadow-NavBus-medium {
+  .shadow-navbus-medium {
     box-shadow: var(--shadow-medium);
   }
   
-  .shadow-NavBus-large {
+  .shadow-navbus-large {
     box-shadow: var(--shadow-large);
   }
   
-  .shadow-NavBus-glow {
+  .shadow-navbus-glow {
     box-shadow: var(--shadow-glow);
   }
   
-  .transition-NavBus {
+  .transition-navbus {
     transition: var(--transition-smooth);
   }
   
-  .transition-NavBus-spring {
+  .transition-navbus-spring {
     transition: var(--transition-spring);
   }
   
-  .text-NavBus-blue {
-    color: hsl(var(--NavBus-blue));
+  .text-navbus-blue {
+    color: hsl(var(--navbus-blue));
   }
   
-  .text-NavBus-green {
-    color: hsl(var(--NavBus-green));
+  .text-navbus-green {
+    color: hsl(var(--navbus-green));
   }
   
-  .bg-NavBus-blue {
-    background-color: hsl(var(--NavBus-blue));
+  .bg-navbus-blue {
+    background-color: hsl(var(--navbus-blue));
   }
   
-  .bg-NavBus-green {
-    background-color: hsl(var(--NavBus-green));
+  .bg-navbus-green {
+    background-color: hsl(var(--navbus-green));
   }
 }

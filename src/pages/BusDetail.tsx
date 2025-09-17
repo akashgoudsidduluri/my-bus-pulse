@@ -61,19 +61,19 @@ export default function BusDetail() {
       <Button 
         variant="ghost" 
         onClick={() => navigate(-1)}
-        className="mb-2 text-NavBus-blue hover:text-NavBus-blue/80"
+        className="mb-2 text-navbus-blue hover:text-navbus-blue/80"
       >
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back
       </Button>
       
-      <div id="map" className="w-full h-64 rounded-xl shadow-NavBus-medium"></div>
+      <div id="map" className="w-full h-64 rounded-xl shadow-navbus-medium"></div>
 
-      <div className="bg-background border border-border rounded-xl shadow-NavBus-soft p-4 text-center">
-        <h1 className="text-xl font-bold mb-2 text-NavBus-blue">{bus.name}</h1>
+      <div className="bg-background border border-border rounded-xl shadow-navbus-soft p-4 text-center">
+        <h1 className="text-xl font-bold mb-2 text-navbus-blue">{bus.name}</h1>
         <p className="text-muted-foreground">Next Stop: <span className="font-medium text-foreground">{bus.stop}</span></p>
         <p className="text-muted-foreground">ETA: <span className="font-medium text-foreground">{bus.eta}</span></p>
-        <p className="text-muted-foreground">Empty Seats: <span className="font-medium text-NavBus-green">{bus.seats}</span></p>
+        <p className="text-muted-foreground">Empty Seats: <span className="font-medium text-navbus-green">{bus.seats}</span></p>
       </div>
     </div>
   );

@@ -19,13 +19,13 @@ export function Hero() {
             <div className="space-y-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
                 Your{" "}
-                <span className="text-NavBus-blue">
+                <span className="text-navbus-blue">
                   Smart Travel
                 </span>{" "}
                 Companion
               </h1>
               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-                NavBus revolutionizes public transport with real-time tracking, crowd estimation, 
+                navbus revolutionizes public transport with real-time tracking, crowd estimation, 
                 and multilingual support. Travel smarter, not harder.
               </p>
             </div>
@@ -49,9 +49,9 @@ export function Hero() {
           <div className="relative mt-8 lg:mt-0">
             <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto">
               <div className="absolute inset-0 bg-gradient-primary rounded-3xl blur-3xl opacity-20 scale-105"></div>
-              <div className="relative bg-background/95 backdrop-blur-sm rounded-3xl p-4 sm:p-6 lg:p-8 shadow-NavBus-large border border-border">
+              <div className="relative bg-background/95 backdrop-blur-sm rounded-3xl p-4 sm:p-6 lg:p-8 shadow-navbus-large border border-border">
                 <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h3 className="font-semibold text-NavBus-blue text-lg sm:text-xl">NavBus</h3>
+                  <h3 className="font-semibold text-navbus-blue text-lg sm:text-xl">navbus</h3>
                   <span className="text-2xl sm:text-3xl">🌐</span>
                 </div>
                 
@@ -59,7 +59,7 @@ export function Hero() {
                   {mockBuses.map((bus) => (
                     <Card
                       key={bus.id}
-                      className="cursor-pointer hover:bg-muted/50 transition-all duration-300 border-l-4 border-l-NavBus-blue"
+                      className="cursor-pointer hover:bg-muted/50 transition-all duration-300 border-l-4 border-l-navbus-blue"
                       onClick={() => navigate(`/bus/${bus.id}`, { state: bus })}
                     >
                       <CardContent className="p-3 sm:p-4">
@@ -68,7 +68,7 @@ export function Hero() {
                           <span className="flex items-center gap-1">
                             🚌 Arriving in {bus.eta}
                           </span>
-                          <span className="flex items-center gap-1 text-NavBus-green">
+                          <span className="flex items-center gap-1 text-navbus-green">
                             👥 {bus.seats < 5 ? 'Light' : 'Moderate'}
                           </span>
                         </div>

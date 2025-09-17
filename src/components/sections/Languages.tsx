@@ -19,7 +19,7 @@ export function Languages() {
             Speak Your Language
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            NavBus supports 9 major Indian languages, ensuring everyone can travel with confidence
+            navbus supports 9 major Indian languages, ensuring everyone can travel with confidence
           </p>
         </div>
 
@@ -27,9 +27,9 @@ export function Languages() {
           {languages.map((language, index) => (
             <div
               key={index}
-              className="group bg-gradient-card rounded-xl p-4 text-center shadow-NavBus-soft hover:shadow-NavBus-medium transition-NavBus hover:-translate-y-1 border-2 border-transparent hover:border-primary/20"
+              className="group bg-gradient-card rounded-xl p-4 text-center shadow-navbus-soft hover:shadow-navbus-medium transition-navbus hover:-translate-y-1 border-2 border-transparent hover:border-primary/20"
             >
-              <div className="text-3xl mb-2 group-hover:scale-110 transition-NavBus">{language.flag}</div>
+              <div className="text-3xl mb-2 group-hover:scale-110 transition-navbus">{language.flag}</div>
               <p className="text-sm font-medium">{language.name}</p>
             </div>
           ))}
