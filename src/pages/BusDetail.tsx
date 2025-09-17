@@ -1,5 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -29,18 +31,40 @@ export default function BusDetail() {
     return () => clearInterval(interval);
   }, [bus]);
 
-  if (!bus) return <p className="text-center mt-10">No bus data found.</p>;
+  if (!bus) {
+    return (
+      <div className="p-4 max-w-xl mx-auto">
+        <Button 
+          variant="ghost" 
+          onClick={() => navigate('/')}
+          className="mb-4"
+        >
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          Back
+        </Button>
+        <p className="text-center mt-10">No bus data found.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 max-w-xl mx-auto space-y-4">
-      <button className="text-blue-500 mb-2" onClick={() => navigate(-1)}>← Back</button>
-      <div id="map" className="w-full h-64 rounded-xl shadow"></div>
+      <Button 
+        variant="ghost" 
+        onClick={() => navigate(-1)}
+        className="mb-2 text-safari-blue hover:text-safari-blue/80"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Back
+      </Button>
+      
+      <div id="map" className="w-full h-64 rounded-xl shadow-safari-medium"></div>
 
-      <div className="bg-white rounded-xl shadow p-4 text-center">
-        <h1 className="text-xl font-bold mb-2">{bus.name}</h1>
-        <p>Next Stop: {bus.stop}</p>
-        <p>ETA: {bus.eta}</p>
-        <p>Empty Seats: {bus.seats}</p>
+      <div className="bg-background border border-border rounded-xl shadow-safari-soft p-4 text-center">
+        <h1 className="text-xl font-bold mb-2 text-safari-blue">{bus.name}</h1>
+        <p className="text-muted-foreground">Next Stop: <span className="font-medium text-foreground">{bus.stop}</span></p>
+        <p className="text-muted-foreground">ETA: <span className="font-medium text-foreground">{bus.eta}</span></p>
+        <p className="text-muted-foreground">Empty Seats: <span className="font-medium text-safari-green">{bus.seats}</span></p>
       </div>
     </div>
   );
