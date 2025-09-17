@@ -514,7 +514,7 @@ nav {
     color: var(--text-primary);
 }
 
-.NavBus-highlight {
+.navbus-highlight {
     color: var(--primary-color);
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     -webkit-background-clip: text;

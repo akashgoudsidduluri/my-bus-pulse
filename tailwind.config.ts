@@ -48,14 +48,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        NavBus: {
-          blue: "hsl(var(--NavBus-blue))",
-          "blue-light": "hsl(var(--NavBus-blue-light))",
-          "blue-dark": "hsl(var(--NavBus-blue-dark))",
-          green: "hsl(var(--NavBus-green))",
-          "green-light": "hsl(var(--NavBus-green-light))",
-          orange: "hsl(var(--NavBus-orange))",
-          gray: "hsl(var(--NavBus-gray))",
+        navbus: {
+          blue: "hsl(var(--navbus-blue))",
+          "blue-light": "hsl(var(--navbus-blue-light))",
+          "blue-dark": "hsl(var(--navbus-blue-dark))",
+          green: "hsl(var(--navbus-green))",
+          "green-light": "hsl(var(--navbus-green-light))",
+          orange: "hsl(var(--navbus-orange))",
+          gray: "hsl(var(--navbus-gray))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -84,14 +84,14 @@ export default {
         'gradient-card': 'var(--gradient-card)',
       },
       boxShadow: {
-        'NavBus-soft': 'var(--shadow-soft)',
-        'NavBus-medium': 'var(--shadow-medium)',
-        'NavBus-large': 'var(--shadow-large)',
-        'NavBus-glow': 'var(--shadow-glow)',
+        'navbus-soft': 'var(--shadow-soft)',
+        'navbus-medium': 'var(--shadow-medium)',
+        'navbus-large': 'var(--shadow-large)',
+        'navbus-glow': 'var(--shadow-glow)',
       },
       transitionTimingFunction: {
-        'NavBus': 'var(--transition-smooth)',
-        'NavBus-spring': 'var(--transition-spring)',
+        'navbus': 'var(--transition-smooth)',
+        'navbus-spring': 'var(--transition-spring)',
       },
       keyframes: {
         "accordion-down": {
