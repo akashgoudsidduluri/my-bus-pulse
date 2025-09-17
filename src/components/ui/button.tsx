@@ -9,14 +9,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90 transition-safari",
-        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-safari",
-        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-safari",
-        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-safari",
-        ghost: "hover:bg-accent hover:text-accent-foreground transition-safari",
-        link: "text-primary underline-offset-4 hover:underline transition-safari",
-        hero: "bg-gradient-primary text-white hover:shadow-safari-glow hover:scale-105 transition-safari-spring border-0",
-        safari: "bg-safari-blue text-white hover:bg-safari-blue-dark hover:shadow-safari-medium transition-safari",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90 transition-navbus",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90 transition-navbus",
+        outline: "border border-input bg-background hover:bg-accent hover:text-accent-foreground transition-navbus",
+        secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-navbus",
+        ghost: "hover:bg-accent hover:text-accent-foreground transition-navbus",
+        link: "text-primary underline-offset-4 hover:underline transition-navbus",
+        hero: "bg-gradient-primary text-white hover:shadow-navbus-glow hover:scale-105 transition-navbus-spring border-0",
+        navbus: "bg-navbus-blue text-white hover:bg-navbus-blue-dark hover:shadow-navbus-medium transition-navbus",
       },
       size: {
         default: "h-10 px-4 py-2",

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import safariLogo from "@/assets/safari-logo.png";
+import navbusLogo from "@/assets/navbus-logo.png";
 
 export function Footer() {
   return (
@@ -7,9 +7,9 @@ export function Footer() {
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <Link to="/" className="flex items-center gap-2 font-bold text-xl text-safari-blue">
-              <img src={safariLogo} alt="Safari Logo" className="w-8 h-8 rounded-lg" />
-              Safari
+            <Link to="/" className="flex items-center gap-2 font-bold text-xl text-navbus-blue">
+              <img src={navbusLogo} alt="navbus Logo" className="w-8 h-8 rounded-lg" />
+              navbus
             </Link>
             <p className="text-muted-foreground">
               Revolutionizing smart mobility and journey management across India and beyond.
@@ -22,19 +22,19 @@ export function Footer() {
           <div className="space-y-4">
             <h4 className="font-semibold text-lg">Quick Links</h4>
             <div className="flex flex-col space-y-2">
-              <Link to="/" className="text-muted-foreground hover:text-primary transition-safari">
+              <Link to="/" className="text-muted-foreground hover:text-primary transition-navbus">
                 Home
               </Link>
-              <Link to="/features" className="text-muted-foreground hover:text-primary transition-safari">
+              <Link to="/features" className="text-muted-foreground hover:text-primary transition-navbus">
                 Features
               </Link>
-              <Link to="/about" className="text-muted-foreground hover:text-primary transition-safari">
+              <Link to="/about" className="text-muted-foreground hover:text-primary transition-navbus">
                 About
               </Link>
-              <Link to="/contact" className="text-muted-foreground hover:text-primary transition-safari">
+              <Link to="/contact" className="text-muted-foreground hover:text-primary transition-navbus">
                 Contact
               </Link>
-              <Link to="/login" className="text-muted-foreground hover:text-primary transition-safari">
+              <Link to="/login" className="text-muted-foreground hover:text-primary transition-navbus">
                 Login
               </Link>
             </div>
@@ -44,16 +44,16 @@ export function Footer() {
             <h4 className="font-semibold text-lg">Support</h4>
             <div className="flex flex-col space-y-2">
               <a 
-                href="mailto:support@safari.com" 
-                className="text-muted-foreground hover:text-primary transition-safari"
+                href="mailto:support@navbus.com" 
+                className="text-muted-foreground hover:text-primary transition-navbus"
               >
-                support@safari.com
+                support@navbus.com
               </a>
               <a 
-                href="tel:+91-1800-SAFARI" 
-                className="text-muted-foreground hover:text-primary transition-safari"
+                href="tel:+91-1800-navbus" 
+                className="text-muted-foreground hover:text-primary transition-navbus"
               >
-                1800-SAFARI
+                1800-navbus
               </a>
               <p className="text-muted-foreground">24/7 Customer Support</p>
             </div>
@@ -72,7 +72,7 @@ export function Footer() {
 
         <div className="border-t border-border mt-12 pt-8 text-center">
           <p className="text-muted-foreground">
-            &copy; 2024 Safari. All rights reserved. | Transforming public transport across India
+            &copy; 2024 navbus. All rights reserved. | Transforming public transport across India
           </p>
         </div>
       </div>

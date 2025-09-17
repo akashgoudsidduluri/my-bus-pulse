@@ -48,14 +48,14 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        safari: {
-          blue: "hsl(var(--safari-blue))",
-          "blue-light": "hsl(var(--safari-blue-light))",
-          "blue-dark": "hsl(var(--safari-blue-dark))",
-          green: "hsl(var(--safari-green))",
-          "green-light": "hsl(var(--safari-green-light))",
-          orange: "hsl(var(--safari-orange))",
-          gray: "hsl(var(--safari-gray))",
+        navbus: {
+          blue: "hsl(var(--navbus-blue))",
+          "blue-light": "hsl(var(--navbus-blue-light))",
+          "blue-dark": "hsl(var(--navbus-blue-dark))",
+          green: "hsl(var(--navbus-green))",
+          "green-light": "hsl(var(--navbus-green-light))",
+          orange: "hsl(var(--navbus-orange))",
+          gray: "hsl(var(--navbus-gray))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
@@ -84,14 +84,14 @@ export default {
         'gradient-card': 'var(--gradient-card)',
       },
       boxShadow: {
-        'safari-soft': 'var(--shadow-soft)',
-        'safari-medium': 'var(--shadow-medium)',
-        'safari-large': 'var(--shadow-large)',
-        'safari-glow': 'var(--shadow-glow)',
+        'navbus-soft': 'var(--shadow-soft)',
+        'navbus-medium': 'var(--shadow-medium)',
+        'navbus-large': 'var(--shadow-large)',
+        'navbus-glow': 'var(--shadow-glow)',
       },
       transitionTimingFunction: {
-        'safari': 'var(--transition-smooth)',
-        'safari-spring': 'var(--transition-spring)',
+        'navbus': 'var(--transition-smooth)',
+        'navbus-spring': 'var(--transition-spring)',
       },
       keyframes: {
         "accordion-down": {

@@ -14,7 +14,7 @@ export default function Contact() {
         <div className="container mx-auto px-4 max-w-4xl">
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
-              Contact <span className="text-safari-blue">Us</span>
+              Contact <span className="text-navbus-blue">Us</span>
             </h1>
             <p className="text-lg text-muted-foreground">
               Have questions or need support? Reach out to us!
@@ -23,7 +23,7 @@ export default function Contact() {
 
           <div className="grid lg:grid-cols-2 gap-12">
             <div className="space-y-8">
-              <div className="bg-gradient-card rounded-2xl p-6 shadow-safari-soft">
+              <div className="bg-gradient-card rounded-2xl p-6 shadow-navbus-soft">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="bg-gradient-primary rounded-lg p-3">
                     <Mail className="h-6 w-6 text-white" />
@@ -34,14 +34,14 @@ export default function Contact() {
                   </div>
                 </div>
                 <a 
-                  href="mailto:support@safari.com" 
-                  className="text-safari-blue hover:underline text-lg"
+                  href="mailto:support@navbus.com" 
+                  className="text-navbus-blue hover:underline text-lg"
                 >
-                  support@safari.com
+                  support@navbus.com
                 </a>
               </div>
 
-              <div className="bg-gradient-card rounded-2xl p-6 shadow-safari-soft">
+              <div className="bg-gradient-card rounded-2xl p-6 shadow-navbus-soft">
                 <div className="flex items-center gap-4 mb-4">
                   <div className="bg-gradient-secondary rounded-lg p-3">
                     <Phone className="h-6 w-6 text-white" />
@@ -52,16 +52,16 @@ export default function Contact() {
                   </div>
                 </div>
                 <a 
-                  href="tel:+91-1800-SAFARI" 
-                  className="text-safari-blue hover:underline text-lg"
+                  href="tel:+91-1800-navbus" 
+                  className="text-navbus-blue hover:underline text-lg"
                 >
-                  1800-SAFARI
+                  1800-navbus
                 </a>
               </div>
 
-              <div className="bg-gradient-card rounded-2xl p-6 shadow-safari-soft">
+              <div className="bg-gradient-card rounded-2xl p-6 shadow-navbus-soft">
                 <div className="flex items-center gap-4">
-                  <div className="bg-safari-green rounded-lg p-3">
+                  <div className="bg-navbus-green rounded-lg p-3">
                     <Clock className="h-6 w-6 text-white" />
                   </div>
                   <div>
@@ -72,7 +72,7 @@ export default function Contact() {
               </div>
             </div>
 
-            <div className="bg-gradient-card rounded-3xl p-8 shadow-safari-large">
+            <div className="bg-gradient-card rounded-3xl p-8 shadow-navbus-large">
               <h2 className="text-2xl font-semibold mb-6">Send us a message</h2>
               
               <form className="space-y-6">
@@ -85,7 +85,7 @@ export default function Contact() {
                     type="text" 
                     placeholder="Enter your name" 
                     required 
-                    className="transition-safari focus:shadow-safari-soft"
+                    className="transition-navbus focus:shadow-navbus-soft"
                   />
                 </div>
                 
@@ -98,7 +98,7 @@ export default function Contact() {
                     type="email" 
                     placeholder="Enter your email" 
                     required 
-                    className="transition-safari focus:shadow-safari-soft"
+                    className="transition-navbus focus:shadow-navbus-soft"
                   />
                 </div>
                 
@@ -111,7 +111,7 @@ export default function Contact() {
                     placeholder="Tell us how we can help you..." 
                     required 
                     rows={6}
-                    className="transition-safari focus:shadow-safari-soft"
+                    className="transition-navbus focus:shadow-navbus-soft"
                   />
                 </div>
                 

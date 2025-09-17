@@ -14,7 +14,7 @@ const features = [
   {
     icon: Globe,
     title: "Multilingual Support",
-    description: "Access Safari in 9 Indian languages, making public transport accessible to everyone."
+    description: "Access navbus in 9 Indian languages, making public transport accessible to everyone."
   },
   {
     icon: Smartphone,
@@ -42,7 +42,7 @@ export function Features() {
             Revolutionary Features
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Safari combines cutting-edge technology with user-centric design to transform your travel experience
+            navbus combines cutting-edge technology with user-centric design to transform your travel experience
           </p>
         </div>
 
@@ -50,9 +50,9 @@ export function Features() {
           {features.map((feature, index) => (
             <div
               key={index}
-              className="group bg-gradient-card rounded-2xl p-6 shadow-safari-soft hover:shadow-safari-medium transition-safari hover:-translate-y-2"
+              className="group bg-gradient-card rounded-2xl p-6 shadow-navbus-soft hover:shadow-navbus-medium transition-navbus hover:-translate-y-2"
             >
-              <div className="bg-gradient-primary rounded-xl w-14 h-14 flex items-center justify-center mb-6 group-hover:shadow-safari-glow transition-safari">
+              <div className="bg-gradient-primary rounded-xl w-14 h-14 flex items-center justify-center mb-6 group-hover:shadow-navbus-glow transition-navbus">
                 <feature.icon className="h-7 w-7 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>

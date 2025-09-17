@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import safariLogo from "@/assets/safari-logo.png";
+import navbusLogo from "@/assets/navbus-logo.png";
 
 export function Header() {
   const location = useLocation();
@@ -14,11 +14,11 @@ export function Header() {
   ];
 
   return (
-    <header className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border transition-safari">
+    <header className="fixed top-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-border transition-navbus">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 font-bold text-xl text-safari-blue">
-          <img src={safariLogo} alt="Safari Logo" className="w-8 h-8 rounded-lg" />
-          Safari
+        <Link to="/" className="flex items-center gap-2 font-bold text-xl text-navbus-blue">
+          <img src={navbusLogo} alt="navbus Logo" className="w-8 h-8 rounded-lg" />
+          navbus
         </Link>
 
         <div className="hidden md:flex items-center gap-1">
@@ -27,7 +27,7 @@ export function Header() {
               key={item.href}
               asChild
               variant={location.pathname === item.href ? "default" : "ghost"}
-              className="transition-safari"
+              className="transition-navbus"
             >
               <Link to={item.href}>{item.label}</Link>
             </Button>
