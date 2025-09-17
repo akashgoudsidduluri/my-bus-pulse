@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import busIcon from "@/assets/bus-icon.png";
+import busIcon from "@/assets/bus-icon.svg";
 
 export default function BusDetail() {
   const navigate = useNavigate();
