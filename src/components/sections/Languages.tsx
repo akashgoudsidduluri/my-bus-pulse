@@ -1,14 +1,22 @@
-const languages = [
-  { flag: "🇬🇧", name: "English" },
-  { flag: "🇮🇳", name: "हिंदी" },
-  { flag: "🇮🇳", name: "తెలుగు" },
-  { flag: "🇮🇳", name: "தமிழ்" },
-  { flag: "🇮🇳", name: "ಕನ್ನಡ" },
-  { flag: "🇮🇳", name: "മലയാളം" },
-  { flag: "🇮🇳", name: "ਪੰਜਾਬੀ" },
-  { flag: "🇮🇳", name: "मराठी" },
-  { flag: "🇮🇳", name: "বাংলা" }
+import usaFlag from "../../assets/usa.png";
+import indiaFlag from "../../assets/india.png";
+
+const languageNames = [
+  "English",
+  "हिंदी",
+  "తెలుగు",
+  "தமிழ்",
+  "ಕನ್ನಡ",
+  "മലയാളം",
+  "ਪੰਜਾਬੀ",
+  "मराठी",
+  "বাংলা"
 ];
+
+const languages = languageNames.map((name) => ({
+  flag: name === "English" ? usaFlag : indiaFlag,
+  name,
+}));
 
 export function Languages() {
   return (
@@ -29,7 +37,13 @@ export function Languages() {
               key={index}
               className="group bg-gradient-card rounded-xl p-4 text-center shadow-NavBus-soft hover:shadow-NavBus-medium transition-NavBus hover:-translate-y-1 border-2 border-transparent hover:border-primary/20"
             >
-              <div className="text-3xl mb-2 group-hover:scale-110 transition-NavBus">{language.flag}</div>
+              <div className="mb-2 group-hover:scale-110 transition-NavBus">
+                <img
+                  src={language.flag}
+                  alt={language.name}
+                  className="w-8 h-8 mx-auto"
+                />
+              </div>
               <p className="text-sm font-medium">{language.name}</p>
             </div>
           ))}
