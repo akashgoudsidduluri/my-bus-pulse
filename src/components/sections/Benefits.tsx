@@ -17,7 +17,7 @@ const benefits = [
     icon: Globe2,
     title: "Environmental Impact",
     description: "Promotes eco-friendly travel habits by reducing traffic congestion and pollution. Encourages shift from private to public transportation.",
-    gradient: "bg-navbus-green"
+    gradient: "bg-NavBus-green"
   }
 ];
 
@@ -30,7 +30,7 @@ export function Benefits() {
             Triple Impact Solution
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            navbus delivers measurable benefits across social, economic, and environmental dimensions
+            NavBus delivers measurable benefits across social, economic, and environmental dimensions
           </p>
         </div>
 
@@ -38,9 +38,9 @@ export function Benefits() {
           {benefits.map((benefit, index) => (
             <div
               key={index}
-              className="group text-center bg-gradient-card rounded-2xl p-8 shadow-navbus-soft hover:shadow-navbus-large transition-navbus hover:-translate-y-2"
+              className="group text-center bg-gradient-card rounded-2xl p-8 shadow-NavBus-soft hover:shadow-NavBus-large transition-NavBus hover:-translate-y-2"
             >
-              <div className={`${benefit.gradient} rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 group-hover:shadow-navbus-glow transition-navbus`}>
+              <div className={`${benefit.gradient} rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6 group-hover:shadow-NavBus-glow transition-NavBus`}>
                 <benefit.icon className="h-10 w-10 text-white" />
               </div>
               <h3 className="text-2xl font-semibold mb-4">{benefit.title}</h3>
