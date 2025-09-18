@@ -1,80 +1,69 @@
-import { useLocation, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import busIcon from "@/assets/bus-icon.svg";
+import React, { useState } from 'react';
+import { MapPin, ArrowRight, Search } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { useNavigate } from 'react-router-dom';
 
-export default function BusDetail() {
+export function RouteSearch() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const bus = location.state;
+  const [origin, setOrigin] = useState('');
+  const [destination, setDestination] = useState('');
 
-  useEffect(() => {
-    if (!bus) return;
-
-    // Create custom bus icon
-    const customBusIcon = L.icon({
-      iconUrl: busIcon,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
-      popupAnchor: [0, -16],
-    });
-
-    const map = L.map("map").setView([bus.lat, bus.lng], 15);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap contributors",
-    }).addTo(map);
-
-    const marker = L.marker([bus.lat, bus.lng], { icon: customBusIcon }).addTo(map).bindPopup(bus.name).openPopup();
-
-    // Simulate movement every 5 seconds
-    const interval = setInterval(() => {
-      bus.lat += (Math.random() - 0.5) * 0.001;
-      bus.lng += (Math.random() - 0.5) * 0.001;
-      marker.setLatLng([bus.lat, bus.lng]);
-      map.setView([bus.lat, bus.lng]);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [bus]);
-
-  if (!bus) {
-    return (
-      <div className="p-4 max-w-xl mx-auto">
-        <Button 
-          variant="ghost" 
-          onClick={() => navigate('/')}
-          className="mb-4"
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
-        </Button>
-        <p className="text-center mt-10">No bus data found.</p>
-      </div>
-    );
-  }
+  const handleSearch = () => {
+    if (origin && destination) {
+      navigate(`/buses?from=${encodeURIComponent(origin)}&to=${encodeURIComponent(destination)}`);
+    }
+  };
 
   return (
-    <div className="p-4 max-w-xl mx-auto space-y-4">
-      <Button 
-        variant="ghost" 
-        onClick={() => navigate(-1)}
-        className="mb-2 text-navbus-blue hover:text-navbus-blue/80"
-      >
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Back
-      </Button>
-      
-      <div id="map" className="w-full h-64 rounded-xl shadow-navbus-medium"></div>
-
-      <div className="bg-background border border-border rounded-xl shadow-navbus-soft p-4 text-center">
-        <h1 className="text-xl font-bold mb-2 text-navbus-blue">{bus.name}</h1>
-        <p className="text-muted-foreground">Next Stop: <span className="font-medium text-foreground">{bus.stop}</span></p>
-        <p className="text-muted-foreground">ETA: <span className="font-medium text-foreground">{bus.eta}</span></p>
-        <p className="text-muted-foreground">Empty Seats: <span className="font-medium text-navbus-green">{bus.seats}</span></p>
-      </div>
-    </div>
+    <Card className="w-full max-w-2xl mx-auto bg-background/95 backdrop-blur-sm border-2 shadow-navbus-medium">
+      <CardContent className="p-6">
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr,auto,1fr] gap-4 items-end">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">From</label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Enter pickup location"
+                  value={origin}
+                  onChange={(e) => setOrigin(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+            
+            <div className="hidden md:flex items-center justify-center pb-2">
+              <ArrowRight className="h-5 w-5 text-navbus-blue" />
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Destination</label>
+              <div className="relative">
+                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Enter destination"
+                  value={destination}
+                  onChange={(e) => setDestination(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+            </div>
+          </div>
+          
+          <Button 
+            onClick={handleSearch}
+            className="w-full"
+            variant="navbus"
+            size="lg"
+            disabled={!origin || !destination}
+          >
+            <Search className="h-4 w-4 mr-2" />
+            Search Buses
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
