@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Features from "./pages/Features";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 
 import BusSearch from "./pages/BusSearch";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/features" element={<Features />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
 
           {/* Your new bus-related pages */}
           <Route path="/buses" element={<BusSearch />} />
