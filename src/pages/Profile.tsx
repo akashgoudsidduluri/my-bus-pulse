@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Phone, Settings, MessageCircle, LogOut, Bell, Moon, Sun, Shield, Globe, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -8,7 +8,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 interface UserData {
   firstName: string;
@@ -22,6 +23,8 @@ interface UserData {
 
 const Profile = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { user, isAuthenticated, logout, updateUser } = useAuth();
   const [activeSection, setActiveSection] = useState('personal');
   const [notifications, setNotifications] = useState(true);
   const [theme, setTheme] = useState('light');
@@ -38,15 +41,30 @@ const Profile = () => {
   const [otpSessionId, setOtpSessionId] = useState('');
   
   // Mock user data - in real app this would come from your backend
-  const [userData, setUserData] = useState<UserData>({
-    firstName: 'John',
-    surname: 'Doe',
-    dateOfBirth: '1990-05-15',
-    location: 'New York, NY',
-    contactNumber: '',
-    phoneNumber: '',
-    email: 'john.doe@email.com'
+  const [userData, setUserData] = useState({
+    firstName: user?.firstName || 'John',
+    surname: user?.surname || 'Doe',
+    dateOfBirth: user?.dateOfBirth || '1990-05-15',
+    location: user?.location || 'New York, NY',
+    contactNumber: user?.contactNumber || '',
+    phoneNumber: user?.phoneNumber || '',
+    email: user?.email || 'john.doe@email.com'
   });
+
+  // Handle section from URL params
+  useEffect(() => {
+    const section = searchParams.get('section');
+    if (section && ['personal', 'contact', 'settings', 'support'].includes(section)) {
+      setActiveSection(section);
+    }
+  }, [searchParams]);
+
+  // Redirect if not authenticated
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
 
   const menuItems = [
     { id: 'personal', label: 'Personal Info', icon: User },
@@ -55,12 +73,14 @@ const Profile = () => {
     { id: 'support', label: 'Contact Us', icon: MessageCircle }
   ];
 
-  const handleInputChange = (field: keyof UserData, value: string) => {
+  const handleInputChange = (field: string, value: string) => {
     setUserData(prev => ({ ...prev, [field]: value }));
+    // Also update the auth context
+    updateUser({ [field]: value });
   };
 
   const handleSignOut = () => {
-    alert('Signed out successfully! Redirecting to home...');
+    logout();
     navigate('/');
   };
 

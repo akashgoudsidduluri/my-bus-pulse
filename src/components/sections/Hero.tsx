@@ -2,6 +2,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Rocket, ArrowRight } from "lucide-react";
+import { RouteSearch } from "@/components/ui/route-search";
+import { useAuth } from "@/contexts/AuthContext";
 
 const mockBuses = [
   { id: 1, name: "Route 45A - City Center", eta: "5 min", seats: 7, stop: "Punjagutta", lat: 17.4239, lng: 78.4521 },
@@ -10,6 +12,7 @@ const mockBuses = [
 
 export function Hero() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   return (
     <section className="min-h-screen flex items-center pt-16 px-4 sm:px-6 lg:px-8 bg-gradient-hero overflow-hidden">
@@ -23,26 +26,33 @@ export function Hero() {
                   Smart Travel
                 </span>{" "}
                 Companion
-              </h1>
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-                navbus revolutionizes public transport with real-time tracking, crowd estimation, 
-                and multilingual support. Travel smarter, not harder.
-              </p>
-            </div>
+               </h1>
+               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
+                 NavBus revolutionizes public transport with real-time tracking, crowd estimation, 
+                 and multilingual support. Travel smarter, not harder.
+               </p>
+             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button asChild variant="hero" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
-                <Link to="/login">
-                  <Rocket className="mr-2 h-4 h-5 w-4 sm:w-5" />
-                  Get Started
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
-                <Link to="/about">
-                  Learn More
-                  <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
-                </Link>
-              </Button>
+            {!isAuthenticated && (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button asChild variant="hero" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
+                  <Link to="/login">
+                    <Rocket className="mr-2 h-4 h-5 w-4 sm:w-5" />
+                    Get Started
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
+                  <Link to="/about">
+                    Learn More
+                    <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
+                  </Link>
+                </Button>
+              </div>
+            )}
+            
+            {/* Route Search - always visible */}
+            <div className="mt-8">
+              <RouteSearch />
             </div>
           </div>
 
@@ -50,8 +60,8 @@ export function Hero() {
             <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg mx-auto">
               <div className="absolute inset-0 bg-gradient-primary rounded-3xl blur-3xl opacity-20 scale-105"></div>
               <div className="relative bg-background/95 backdrop-blur-sm rounded-3xl p-4 sm:p-6 lg:p-8 shadow-navbus-large border border-border">
-                <div className="flex items-center justify-between mb-4 sm:mb-6">
-                  <h3 className="font-semibold text-navbus-blue text-lg sm:text-xl">navbus</h3>
+                 <div className="flex items-center justify-between mb-4 sm:mb-6">
+                   <h3 className="font-semibold text-navbus-blue text-lg sm:text-xl">NavBus</h3>
                   <span className="text-2xl sm:text-3xl">🌐</span>
                 </div>
                 
