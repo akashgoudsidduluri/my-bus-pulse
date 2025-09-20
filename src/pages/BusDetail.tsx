@@ -11,19 +11,26 @@ const BusDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Mock bus data - in real app, fetch based on ID
-  const busData = {
-    id: id,
-    name: 'Express City Bus',
-    route: 'City Center → Airport',
+  // Find bus data based on ID
+  const selectedBus = mockBuses.find(bus => bus.id.toString() === id);
+  
+  // Mock detailed bus data - in real app, fetch based on ID
+  const busData = selectedBus ? {
+    id: selectedBus.id,
+    name: selectedBus.name,
+    route: `${selectedBus.stop} → Destination`,
     departure: '09:30 AM',
     arrival: '11:15 AM',
     duration: '1h 45m',
     price: '₹150',
-    seats: 32,
+    seats: selectedBus.seats,
     rating: 4.5,
     amenities: ['WiFi', 'AC', 'Charging Port', 'Reclining Seats']
-  };
+  } : null;
+
+  if (!busData) {
+    return <div>Bus not found</div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -46,10 +53,7 @@ const BusDetail = () => {
                         ? 'border-primary bg-primary/10' 
                         : 'hover:bg-muted'
                     }`}
-                    onClick={() => {
-                      navigate(`/bus/${bus.id}`);
-                      window.location.reload();
-                    }}
+                    onClick={() => navigate(`/bus/${bus.id}`)}
                   >
                     <CardContent className="p-3">
                       <h3 className="font-semibold text-sm">{bus.name}</h3>
