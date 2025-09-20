@@ -29,7 +29,7 @@ const BusDetail = () => {
     <div className="min-h-screen bg-background">
       <Header />
       
-      <main className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-12">
         <div className="flex gap-6 max-w-7xl mx-auto">
           {/* Bus List Sidebar */}
           <div className="w-80 flex-shrink-0">
