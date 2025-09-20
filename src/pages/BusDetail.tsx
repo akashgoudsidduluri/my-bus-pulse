@@ -46,7 +46,10 @@ const BusDetail = () => {
                         ? 'border-primary bg-primary/10' 
                         : 'hover:bg-muted'
                     }`}
-                    onClick={() => navigate(`/bus/${bus.id}`)}
+                    onClick={() => {
+                      navigate(`/bus/${bus.id}`);
+                      window.location.reload();
+                    }}
                   >
                     <CardContent className="p-3">
                       <h3 className="font-semibold text-sm">{bus.name}</h3>
