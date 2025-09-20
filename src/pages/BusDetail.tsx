@@ -1,69 +1,98 @@
-import React, { useState } from 'react';
-import { MapPin, ArrowRight, Search } from 'lucide-react';
+import React from 'react';
+import { useParams } from 'react-router-dom';
+import { Clock, MapPin, Users, Star } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent } from '@/components/ui/card';
-import { useNavigate } from 'react-router-dom';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
 
-export function RouteSearch() {
-  const navigate = useNavigate();
-  const [origin, setOrigin] = useState('');
-  const [destination, setDestination] = useState('');
+const BusDetail = () => {
+  const { id } = useParams();
 
-  const handleSearch = () => {
-    if (origin && destination) {
-      navigate(`/buses?from=${encodeURIComponent(origin)}&to=${encodeURIComponent(destination)}`);
-    }
+  // Mock bus data - in real app, fetch based on ID
+  const busData = {
+    id: id,
+    name: 'Express City Bus',
+    route: 'City Center → Airport',
+    departure: '09:30 AM',
+    arrival: '11:15 AM',
+    duration: '1h 45m',
+    price: '₹150',
+    seats: 32,
+    rating: 4.5,
+    amenities: ['WiFi', 'AC', 'Charging Port', 'Reclining Seats']
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto bg-background/95 backdrop-blur-sm border-2 shadow-navbus-medium">
-      <CardContent className="p-6">
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-[1fr,auto,1fr] gap-4 items-end">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">From</label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Enter pickup location"
-                  value={origin}
-                  onChange={(e) => setOrigin(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            
-            <div className="hidden md:flex items-center justify-center pb-2">
-              <ArrowRight className="h-5 w-5 text-navbus-blue" />
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">Destination</label>
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Enter destination"
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      
+      <main className="container mx-auto px-4 py-8">
+        <Card className="max-w-4xl mx-auto">
+          <CardHeader>
+            <CardTitle className="text-2xl font-bold text-foreground">
+              {busData.name}
+            </CardTitle>
+            <p className="text-muted-foreground flex items-center gap-2">
+              <MapPin className="h-4 w-4" />
+              {busData.route}
+            </p>
+          </CardHeader>
           
-          <Button 
-            onClick={handleSearch}
-            className="w-full"
-            variant="navbus"
-            size="lg"
-            disabled={!origin || !destination}
-          >
-            <Search className="h-4 w-4 mr-2" />
-            Search Buses
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
+          <CardContent className="space-y-6">
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-primary" />
+                  <span className="font-medium">Departure: {busData.departure}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-5 w-5 text-primary" />
+                  <span className="font-medium">Arrival: {busData.arrival}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-primary" />
+                  <span className="font-medium">{busData.seats} seats available</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Star className="h-5 w-5 text-yellow-500" />
+                  <span className="font-medium">{busData.rating}/5 rating</span>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <div className="text-3xl font-bold text-primary">
+                  {busData.price}
+                </div>
+                <div className="text-muted-foreground">
+                  Duration: {busData.duration}
+                </div>
+                <Button size="lg" className="w-full">
+                  Book Now
+                </Button>
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Amenities</h3>
+              <div className="flex flex-wrap gap-2">
+                {busData.amenities.map((amenity, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-secondary text-secondary-foreground rounded-full text-sm"
+                  >
+                    {amenity}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </main>
+      
+      <Footer />
+    </div>
   );
-}
+};
+
+export default BusDetail;
