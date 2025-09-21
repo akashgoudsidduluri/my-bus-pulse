@@ -1,118 +1,178 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { User, Session } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
 
-interface User {
+interface Profile {
   id: string;
-  firstName: string;
-  surname: string;
-  email: string;
-  dateOfBirth?: string;
+  user_id: string;
+  first_name?: string;
+  last_name?: string;
+  phone_number?: string;
   location?: string;
-  contactNumber?: string;
-  phoneNumber?: string;
+  date_of_birth?: string;
+}
+
+interface AuthUser extends User {
+  profile?: Profile;
 }
 
 interface AuthContextType {
-  user: User | null;
+  user: AuthUser | null;
+  session: Session | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  signup: (userData: Partial<User> & { email: string; password: string }) => Promise<boolean>;
-  logout: () => void;
-  updateUser: (userData: Partial<User>) => void;
+  login: (email: string, password: string) => Promise<{ error: string | null }>;
+  signup: (userData: { email: string; password: string; firstName?: string; lastName?: string }) => Promise<{ error: string | null }>;
+  logout: () => Promise<void>;
+  updateProfile: (userData: Partial<Profile>) => Promise<{ error: string | null }>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Load user from localStorage on app start
   useEffect(() => {
-    const savedUser = localStorage.getItem('navbus_user');
-    const savedAuth = localStorage.getItem('navbus_authenticated');
-    
-    if (savedUser && savedAuth === 'true') {
-      setUser(JSON.parse(savedUser));
-      setIsAuthenticated(true);
-    }
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        setSession(session);
+        
+        if (session?.user) {
+          // Fetch user profile
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single();
+          
+          const userWithProfile = {
+            ...session.user,
+            profile
+          };
+          
+          setUser(userWithProfile);
+          setIsAuthenticated(true);
+        } else {
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+      }
+    );
+
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        // Fetch user profile
+        setTimeout(async () => {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('user_id', session.user.id)
+            .single();
+          
+          const userWithProfile = {
+            ...session.user,
+            profile
+          };
+          
+          setUser(userWithProfile);
+          setSession(session);
+          setIsAuthenticated(true);
+        }, 0);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
-  // Save user to localStorage whenever user changes
-  useEffect(() => {
-    if (user && isAuthenticated) {
-      localStorage.setItem('navbus_user', JSON.stringify(user));
-      localStorage.setItem('navbus_authenticated', 'true');
-    } else {
-      localStorage.removeItem('navbus_user');
-      localStorage.removeItem('navbus_authenticated');
-    }
-  }, [user, isAuthenticated]);
+  const login = async (email: string, password: string): Promise<{ error: string | null }> => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-  const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock authentication - in real app, this would call your backend
-    if (email && password) {
-      const mockUser: User = {
-        id: '1',
-        firstName: 'John',
-        surname: 'Doe',
-        email: email,
-        dateOfBirth: '1990-05-15',
-        location: 'New York, NY',
-        contactNumber: '',
-        phoneNumber: ''
-      };
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { error: null };
+    } catch (error) {
+      return { error: 'An unexpected error occurred during login' };
+    }
+  };
+
+  const signup = async (userData: { email: string; password: string; firstName?: string; lastName?: string }): Promise<{ error: string | null }> => {
+    try {
+      const redirectUrl = `${window.location.origin}/`;
       
-      setUser(mockUser);
-      setIsAuthenticated(true);
-      return true;
+      const { error } = await supabase.auth.signUp({
+        email: userData.email,
+        password: userData.password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            first_name: userData.firstName || '',
+            last_name: userData.lastName || ''
+          }
+        }
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { error: null };
+    } catch (error) {
+      return { error: 'An unexpected error occurred during signup' };
     }
-    
-    return false;
   };
 
-  const signup = async (userData: Partial<User> & { email: string; password: string }): Promise<boolean> => {
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock registration - in real app, this would call your backend
-    const newUser: User = {
-      id: Date.now().toString(),
-      firstName: userData.firstName || '',
-      surname: userData.surname || '',
-      email: userData.email,
-      dateOfBirth: userData.dateOfBirth || '',
-      location: userData.location || '',
-      contactNumber: userData.contactNumber || '',
-      phoneNumber: userData.phoneNumber || ''
-    };
-    
-    setUser(newUser);
-    setIsAuthenticated(true);
-    return true;
+  const logout = async (): Promise<void> => {
+    await supabase.auth.signOut();
   };
 
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-  };
+  const updateProfile = async (userData: Partial<Profile>): Promise<{ error: string | null }> => {
+    if (!user) {
+      return { error: 'No user logged in' };
+    }
 
-  const updateUser = (userData: Partial<User>) => {
-    if (user) {
-      setUser({ ...user, ...userData });
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update(userData)
+        .eq('user_id', user.id);
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      // Update local user state
+      if (user.profile) {
+        const updatedUser = {
+          ...user,
+          profile: { ...user.profile, ...userData }
+        };
+        setUser(updatedUser);
+      }
+
+      return { error: null };
+    } catch (error) {
+      return { error: 'An unexpected error occurred while updating profile' };
     }
   };
 
   return (
     <AuthContext.Provider value={{
       user,
+      session,
       isAuthenticated,
       login,
       signup,
       logout,
-      updateUser
+      updateProfile
     }}>
       {children}
     </AuthContext.Provider>
