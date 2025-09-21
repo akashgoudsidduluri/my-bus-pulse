@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { mockBuses } from './BusSearch';
-import GoogleMap from '@/components/ui/google-map';
+import LeafletMap from '@/components/ui/leaflet-map';
 
 const BusDetail = () => {
   const { id } = useParams();
@@ -187,7 +187,7 @@ const BusDetail = () => {
                 
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Live Bus Tracking</h3>
-                  <GoogleMap
+                  <LeafletMap
                     startLat={busData.startLat}
                     startLng={busData.startLng}
                     endLat={busData.endLat}
