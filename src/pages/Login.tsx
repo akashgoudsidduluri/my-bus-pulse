@@ -1,72 +1,60 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { Phone, ArrowLeft, Shield } from "lucide-react";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isSignUp, setIsSignUp] = useState(false);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [otp, setOtp] = useState("");
+  const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { login, signup, isAuthenticated } = useAuth();
+  const { sendOtp, verifyOtp, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
   // Redirect if already authenticated
   if (isAuthenticated) {
-    navigate('/');
+    navigate('/dashboard');
     return null;
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Basic phone validation
+    if (!phone || phone.length < 10) {
+      toast({
+        title: "Invalid Phone Number",
+        description: "Please enter a valid phone number",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      if (isSignUp) {
-        const { error } = await signup({
-          email,
-          password,
-          firstName,
-          lastName
+      const { error } = await sendOtp(phone);
+
+      if (error) {
+        toast({
+          title: "Failed to Send OTP",
+          description: error,
+          variant: "destructive"
         });
-
-        if (error) {
-          toast({
-            title: "Sign Up Failed",
-            description: error,
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Account Created Successfully",
-            description: "Please check your email to verify your account."
-          });
-          navigate('/');
-        }
       } else {
-        const { error } = await login(email, password);
-
-        if (error) {
-          toast({
-            title: "Login Failed",
-            description: error,
-            variant: "destructive"
-          });
-        } else {
-          toast({
-            title: "Welcome Back!",
-            description: "You have successfully logged in."
-          });
-          navigate('/');
-        }
+        toast({
+          title: "OTP Sent!",
+          description: "Please check your phone for the verification code."
+        });
+        setStep('otp');
       }
     } catch (error) {
       toast({
@@ -79,6 +67,52 @@ const Login = () => {
     }
   };
 
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!otp || otp.length !== 6) {
+      toast({
+        title: "Invalid OTP",
+        description: "Please enter the 6-digit verification code",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const { error } = await verifyOtp(phone, otp);
+
+      if (error) {
+        toast({
+          title: "Verification Failed",
+          description: error,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Welcome!",
+          description: "You have successfully logged in."
+        });
+        navigate('/dashboard');
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleBackToPhone = () => {
+    setStep('phone');
+    setOtp("");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-hero">
       <Header />
@@ -87,105 +121,101 @@ const Login = () => {
         <div className="container mx-auto px-4 flex items-center justify-center">
           <div className="bg-gradient-card rounded-3xl p-8 shadow-navbus-large max-w-md w-full">
             <div className="text-center mb-8">
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-navbus-blue/10 rounded-full mb-4">
+                {step === 'phone' ? (
+                  <Phone className="w-8 h-8 text-navbus-blue" />
+                ) : (
+                  <Shield className="w-8 h-8 text-navbus-blue" />
+                )}
+              </div>
               <h1 className="text-3xl font-bold mb-2">
-                {isSignUp ? "Join" : "Login to"} <span className="text-navbus-blue">navbus</span>
+                {step === 'phone' ? 'Enter Phone Number' : 'Verify OTP'}
               </h1>
               <p className="text-muted-foreground">
-                {isSignUp ? "Create your account to get started." : "Welcome back! Please sign in to continue."}
+                {step === 'phone' 
+                  ? 'We\'ll send you a verification code via SMS' 
+                  : `Enter the 6-digit code sent to ${phone}`
+                }
               </p>
             </div>
             
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {isSignUp && (
-                <>
-                  <div>
-                    <label htmlFor="firstName" className="block text-sm font-medium mb-2">
-                      First Name
-                    </label>
-                    <Input 
-                      id="firstName"
-                      type="text" 
-                      placeholder="Enter your first name" 
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      className="transition-navbus focus:shadow-navbus-soft"
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium mb-2">
-                      Last Name
-                    </label>
-                    <Input 
-                      id="lastName"
-                      type="text" 
-                      placeholder="Enter your last name" 
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      className="transition-navbus focus:shadow-navbus-soft"
-                    />
-                  </div>
-                </>
-              )}
-              
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
-                  Email
-                </label>
-                <Input 
-                  id="email"
-                  type="email" 
-                  placeholder="Enter your email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required 
-                  className="transition-navbus focus:shadow-navbus-soft"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium mb-2">
-                  Password
-                </label>
-                <Input 
-                  id="password"
-                  type="password" 
-                  placeholder="Enter your password" 
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required 
-                  className="transition-navbus focus:shadow-navbus-soft"
-                />
-              </div>
-              
-              <Button 
-                type="submit" 
-                variant="hero" 
-                size="lg" 
-                className="w-full"
-                disabled={isLoading}
-              >
-                {isLoading ? "Loading..." : (isSignUp ? "Sign Up" : "Login")}
-              </Button>
-            </form>
-            
-            <div className="text-center mt-6 space-x-4">
-              {!isSignUp && (
-                <Link 
-                  to="#" 
-                  className="text-navbus-blue hover:underline text-sm transition-navbus"
+            {step === 'phone' ? (
+              <form onSubmit={handleSendOtp} className="space-y-6">
+                <div>
+                  <label htmlFor="phone" className="block text-sm font-medium mb-2">
+                    Phone Number
+                  </label>
+                  <Input 
+                    id="phone"
+                    type="tel" 
+                    placeholder="+1 (555) 123-4567" 
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required 
+                    className="transition-navbus focus:shadow-navbus-soft text-center text-lg"
+                  />
+                  <p className="text-xs text-muted-foreground mt-2">
+                    Include country code (e.g., +1 for US)
+                  </p>
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  variant="hero" 
+                  size="lg" 
+                  className="w-full"
+                  disabled={isLoading}
                 >
-                  Forgot Password?
-                </Link>
-              )}
-              <button
-                type="button"
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="text-navbus-blue hover:underline text-sm transition-navbus"
-              >
-                {isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up"}
-              </button>
-            </div>
+                  {isLoading ? "Sending..." : "Send OTP"}
+                </Button>
+              </form>
+            ) : (
+              <form onSubmit={handleVerifyOtp} className="space-y-6">
+                <div>
+                  <label htmlFor="otp" className="block text-sm font-medium mb-4 text-center">
+                    Verification Code
+                  </label>
+                  <div className="flex justify-center">
+                    <InputOTP
+                      value={otp}
+                      onChange={setOtp}
+                      maxLength={6}
+                    >
+                      <InputOTPGroup>
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
+                      </InputOTPGroup>
+                    </InputOTP>
+                  </div>
+                </div>
+                
+                <Button 
+                  type="submit" 
+                  variant="hero" 
+                  size="lg" 
+                  className="w-full"
+                  disabled={isLoading}
+                >
+                  {isLoading ? "Verifying..." : "Verify & Login"}
+                </Button>
+
+                <Button 
+                  type="button"
+                  variant="ghost" 
+                  size="lg" 
+                  className="w-full"
+                  onClick={handleBackToPhone}
+                  disabled={isLoading}
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Back to Phone Number
+                </Button>
+              </form>
+            )}
           </div>
         </div>
       </main>

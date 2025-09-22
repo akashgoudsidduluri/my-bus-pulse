@@ -20,8 +20,8 @@ interface AuthContextType {
   user: AuthUser | null;
   session: Session | null;
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<{ error: string | null }>;
-  signup: (userData: { email: string; password: string; firstName?: string; lastName?: string }) => Promise<{ error: string | null }>;
+  sendOtp: (phone: string) => Promise<{ error: string | null }>;
+  verifyOtp: (phone: string, token: string) => Promise<{ error: string | null }>;
   logout: () => Promise<void>;
   updateProfile: (userData: Partial<Profile>) => Promise<{ error: string | null }>;
 }
@@ -87,36 +87,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = async (email: string, password: string): Promise<{ error: string | null }> => {
+  const sendOtp = async (phone: string): Promise<{ error: string | null }> => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        return { error: error.message };
-      }
-
-      return { error: null };
-    } catch (error) {
-      return { error: 'An unexpected error occurred during login' };
-    }
-  };
-
-  const signup = async (userData: { email: string; password: string; firstName?: string; lastName?: string }): Promise<{ error: string | null }> => {
-    try {
-      const redirectUrl = `${window.location.origin}/`;
-      
-      const { error } = await supabase.auth.signUp({
-        email: userData.email,
-        password: userData.password,
+      const { error } = await supabase.auth.signInWithOtp({
+        phone: phone,
         options: {
-          emailRedirectTo: redirectUrl,
-          data: {
-            first_name: userData.firstName || '',
-            last_name: userData.lastName || ''
-          }
+          channel: 'sms'
         }
       });
 
@@ -126,7 +102,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return { error: null };
     } catch (error) {
-      return { error: 'An unexpected error occurred during signup' };
+      return { error: 'An unexpected error occurred while sending OTP' };
+    }
+  };
+
+  const verifyOtp = async (phone: string, token: string): Promise<{ error: string | null }> => {
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        phone: phone,
+        token: token,
+        type: 'sms'
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { error: null };
+    } catch (error) {
+      return { error: 'An unexpected error occurred while verifying OTP' };
     }
   };
 
@@ -169,8 +163,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       session,
       isAuthenticated,
-      login,
-      signup,
+      sendOtp,
+      verifyOtp,
       logout,
       updateProfile
     }}>
