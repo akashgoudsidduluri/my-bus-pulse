@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Rocket, ArrowRight } from "lucide-react";
+import { Rocket, ArrowRight, MapPin, Clock } from "lucide-react";
 import { RouteSearch } from "@/components/ui/route-search";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -12,7 +12,7 @@ const mockBuses = [
 
 export function Hero() {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <section className="min-h-screen flex items-center pt-16 px-4 sm:px-6 lg:px-8 bg-gradient-hero overflow-hidden">
@@ -20,20 +20,48 @@ export function Hero() {
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-4">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-                Your{" "}
-                <span className="text-navbus-blue">
-                  Smart Travel
-                </span>{" "}
-                Companion
-               </h1>
-               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
-                 NavBus revolutionizes public transport with real-time tracking, crowd estimation, 
-                 and multilingual support. Travel smarter, not harder.
-               </p>
-             </div>
+              {isAuthenticated ? (
+                <>
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                    Welcome back{user?.profile?.first_name ? `, ${user.profile.first_name}` : ''}!
+                  </h1>
+                  <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
+                    Ready to plan your next journey? Find real-time bus information and track your routes.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                    Your{" "}
+                    <span className="text-navbus-blue">
+                      Smart Travel
+                    </span>{" "}
+                    Companion
+                  </h1>
+                  <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
+                    NavBus revolutionizes public transport with real-time tracking, crowd estimation, 
+                    and multilingual support. Travel smarter, not harder.
+                  </p>
+                </>
+              )}
+            </div>
             
-            {!isAuthenticated && (
+            {isAuthenticated ? (
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Button asChild variant="hero" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
+                  <Link to="/buses">
+                    <MapPin className="mr-2 h-4 h-5 w-4 sm:w-5" />
+                    Find Buses
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
+                  <Link to="/profile">
+                    <Clock className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
+                    My Profile
+                  </Link>
+                </Button>
+              </div>
+            ) : (
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Button asChild variant="hero" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
                   <Link to="/login">
