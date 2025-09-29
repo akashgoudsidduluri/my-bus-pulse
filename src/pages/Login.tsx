@@ -5,8 +5,6 @@ import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { AnimatedBackground } from "@/components/ui/animated-background";
-import { FloatingElement, GlowEffect } from "@/components/ui/floating-effects";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Phone, ArrowLeft, Shield } from "lucide-react";
@@ -116,27 +114,20 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero relative">
-      {/* Animated Background */}
-      <AnimatedBackground variant="particles" intensity="low" color="blue" />
-      
+    <div className="min-h-screen bg-gradient-hero">
       <Header />
       
-      <main className="pt-24 pb-16 relative z-10">
+      <main className="pt-24 pb-16">
         <div className="container mx-auto px-4 flex items-center justify-center">
-          <FloatingElement delay={0.5} duration={8} amplitude={15}>
-            <GlowEffect color="rgba(59, 130, 246, 0.5)" intensity="medium">
-              <div className="bg-gradient-card rounded-3xl p-8 shadow-navbus-large max-w-md w-full backdrop-blur-sm">
+          <div className="bg-gradient-card rounded-3xl p-8 shadow-navbus-large max-w-md w-full">
             <div className="text-center mb-8">
-              <FloatingElement delay={1} duration={6} amplitude={10}>
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-navbus-blue/10 rounded-full mb-4">
-                  {step === 'phone' ? (
-                    <Phone className="w-8 h-8 text-navbus-blue" />
-                  ) : (
-                    <Shield className="w-8 h-8 text-navbus-blue" />
-                  )}
-                </div>
-              </FloatingElement>
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-navbus-blue/10 rounded-full mb-4">
+                {step === 'phone' ? (
+                  <Phone className="w-8 h-8 text-navbus-blue" />
+                ) : (
+                  <Shield className="w-8 h-8 text-navbus-blue" />
+                )}
+              </div>
               <h1 className="text-3xl font-bold mb-2">
                 {step === 'phone' ? 'Enter Phone Number' : 'Verify OTP'}
               </h1>
@@ -225,9 +216,7 @@ const Login = () => {
                 </Button>
               </form>
             )}
-              </div>
-            </GlowEffect>
-          </FloatingElement>
+          </div>
         </div>
       </main>
 
