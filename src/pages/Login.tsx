@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -17,7 +17,20 @@ const Login = () => {
   
   const { sendOtp, verifyOtp, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
+
+  // Show success message from signup if present
+  useEffect(() => {
+    if (location.state?.message) {
+      toast({
+        title: "Success",
+        description: location.state.message
+      });
+      // Clear the message from location state
+      navigate('/login', { replace: true });
+    }
+  }, [location.state, toast, navigate]);
 
   // Redirect if already authenticated
   if (isAuthenticated) {
@@ -216,6 +229,18 @@ const Login = () => {
                 </Button>
               </form>
             )}
+            
+            <div className="text-center pt-6 mt-6 border-t border-border">
+              <p className="text-muted-foreground">
+                Don't have an account?{" "}
+                <Link 
+                  to="/signup" 
+                  className="text-navbus-blue hover:text-navbus-blue/80 font-medium transition-colors"
+                >
+                  Sign up
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </main>
