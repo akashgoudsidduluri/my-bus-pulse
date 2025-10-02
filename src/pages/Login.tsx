@@ -19,7 +19,7 @@ const Login = () => {
   const [step, setStep] = useState<'credentials' | 'otp'>('credentials');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { sendOtp, verifyOtp, isAuthenticated } = useAuth();
+  const { sendOtp, verifyOtp, signIn, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
@@ -66,9 +66,16 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // TODO: Implement email/password login with Supabase
-      // For now, simulate login success
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { error } = await signIn(email, password);
+      
+      if (error) {
+        toast({
+          title: "Login Failed",
+          description: error,
+          variant: "destructive"
+        });
+        return;
+      }
       
       toast({
         title: "Login Successful",
@@ -78,7 +85,7 @@ const Login = () => {
     } catch (error) {
       toast({
         title: "Login Failed",
-        description: "Invalid email or password. Please try again.",
+        description: "An unexpected error occurred.",
         variant: "destructive"
       });
     } finally {

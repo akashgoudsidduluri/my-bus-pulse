@@ -20,8 +20,11 @@ interface AuthContextType {
   user: AuthUser | null;
   session: Session | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   sendOtp: (phone: string) => Promise<{ error: string | null }>;
   verifyOtp: (phone: string, token: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, metadata?: any) => Promise<{ error: string | null }>;
+  signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   logout: () => Promise<void>;
   updateProfile: (userData: Partial<Profile>) => Promise<{ error: string | null }>;
 }
@@ -32,6 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -80,7 +84,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(userWithProfile);
           setSession(session);
           setIsAuthenticated(true);
+          setIsLoading(false);
         }, 0);
+      } else {
+        setIsLoading(false);
       }
     });
 
@@ -88,6 +95,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const sendOtp = async (phone: string): Promise<{ error: string | null }> => {
+    // Validate phone number format
+    if (!/^\+?\d{10,15}$/.test(phone)) {
+      return { error: 'Please enter a valid phone number' };
+    }
+
     try {
       const { error } = await supabase.auth.signInWithOtp({
         phone: phone,
@@ -121,6 +133,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { error: null };
     } catch (error) {
       return { error: 'An unexpected error occurred while verifying OTP' };
+    }
+  };
+
+  const signUp = async (email: string, password: string, metadata?: any): Promise<{ error: string | null }> => {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/`,
+          data: metadata
+        }
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { error: null };
+    } catch (error) {
+      return { error: 'An unexpected error occurred during signup' };
+    }
+  };
+
+  const signIn = async (email: string, password: string): Promise<{ error: string | null }> => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { error: null };
+    } catch (error) {
+      return { error: 'An unexpected error occurred during login' };
     }
   };
 
@@ -163,8 +213,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       user,
       session,
       isAuthenticated,
+      isLoading,
       sendOtp,
       verifyOtp,
+      signUp,
+      signIn,
       logout,
       updateProfile
     }}>

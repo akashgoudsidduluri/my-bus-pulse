@@ -23,7 +23,7 @@ const Signup = () => {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
-  const { isAuthenticated } = useAuth();
+  const { signUp, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -59,10 +59,10 @@ const Signup = () => {
       return false;
     }
 
-    if (!formData.phone.trim() || formData.phone.length < 10) {
+    if (!formData.phone.trim() || !/^\+?\d{10,15}$/.test(formData.phone)) {
       toast({
         title: "Invalid Phone Number",
-        description: "Please enter a valid phone number",
+        description: "Please enter a valid phone number (10-15 digits)",
         variant: "destructive"
       });
       return false;
@@ -106,10 +106,19 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      // For now, we'll simulate signup success and redirect to login
-      // In a real implementation, you'd call your signup API here
+      const { error } = await signUp(formData.email, formData.password, {
+        full_name: formData.fullName,
+        phone_number: formData.phone
+      });
       
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      if (error) {
+        toast({
+          title: "Signup Failed",
+          description: error,
+          variant: "destructive"
+        });
+        return;
+      }
       
       toast({
         title: "Registration Successful!",
