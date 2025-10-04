@@ -3,8 +3,8 @@ import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { AuthHeader } from "@/components/auth/AuthHeader";
-import { AuthFooter } from "@/components/auth/AuthFooter";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Phone, ArrowLeft, Shield } from "lucide-react";
@@ -24,7 +24,7 @@ const Login = () => {
   useEffect(() => {
     if (location.state?.message) {
       toast({
-        title: "Account Created Successfully",
+        title: "Success",
         description: location.state.message
       });
       // Clear the message from location state
@@ -41,6 +41,7 @@ const Login = () => {
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Basic phone validation
     if (!phone || phone.length < 10) {
       toast({
         title: "Invalid Phone Number",
@@ -63,7 +64,7 @@ const Login = () => {
         });
       } else {
         toast({
-          title: "OTP Sent Successfully",
+          title: "OTP Sent!",
           description: "Please check your phone for the verification code."
         });
         setStep('otp');
@@ -126,31 +127,35 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <AuthHeader />
+    <div className="min-h-screen bg-gradient-hero">
+      <Header />
       
-      <main className="flex-1 flex items-center justify-center py-12 px-4">
-        <div className="w-full max-w-md">
-          <div className="bg-white border-2 border-[hsl(var(--border))] rounded-lg shadow-lg p-8">
+      <main className="pt-24 pb-16">
+        <div className="container mx-auto px-4 flex items-center justify-center">
+          <div className="bg-gradient-card rounded-3xl p-8 shadow-navbus-large max-w-md w-full">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[hsl(var(--gov-navy))] rounded-full mb-4">
-                <Shield className="w-8 h-8 text-white" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-navbus-blue/10 rounded-full mb-4">
+                {step === 'phone' ? (
+                  <Phone className="w-8 h-8 text-navbus-blue" />
+                ) : (
+                  <Shield className="w-8 h-8 text-navbus-blue" />
+                )}
               </div>
-              <h1 className="text-3xl font-bold text-[hsl(var(--gov-navy))] mb-2">
-                Secure Login
+              <h1 className="text-3xl font-bold mb-2">
+                {step === 'phone' ? 'Enter Phone Number' : 'Verify OTP'}
               </h1>
-              <p className="text-[hsl(var(--gov-gray))] text-sm">
-                Access your NavBus Official Portal account
-              </p>
-              <p className="text-xs text-[hsl(var(--gov-gray))] mt-2 italic">
-                Your information is protected under data security standards.
+              <p className="text-muted-foreground">
+                {step === 'phone' 
+                  ? 'We\'ll send you a verification code via SMS' 
+                  : `Enter the 6-digit code sent to ${phone}`
+                }
               </p>
             </div>
             
             {step === 'phone' ? (
               <form onSubmit={handleSendOtp} className="space-y-6">
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-[hsl(var(--gov-navy))] mb-2">
+                  <label htmlFor="phone" className="block text-sm font-medium mb-2">
                     Phone Number
                   </label>
                   <Input 
@@ -160,35 +165,28 @@ const Login = () => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     required 
-                    className="h-12 border-2 border-[hsl(var(--border))] focus:border-[hsl(var(--gov-navy))] focus:ring-2 focus:ring-[hsl(var(--gov-navy))]/20 text-center text-lg"
+                    className="transition-navbus focus:shadow-navbus-soft text-center text-lg"
                   />
-                  <p className="text-xs text-[hsl(var(--gov-gray))] mt-2">
+                  <p className="text-xs text-muted-foreground mt-2">
                     Include country code (e.g., +1 for US)
                   </p>
                 </div>
                 
                 <Button 
                   type="submit" 
-                  className="w-full h-12 bg-[hsl(var(--gov-navy))] hover:bg-[hsl(var(--gov-navy-dark))] text-white font-bold text-lg"
+                  variant="hero" 
+                  size="lg" 
+                  className="w-full"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Sending..." : "Send Security Code"}
+                  {isLoading ? "Sending..." : "Send OTP"}
                 </Button>
               </form>
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-6">
-                <div className="text-center mb-6">
-                  <h2 className="text-xl font-bold text-[hsl(var(--gov-navy))] mb-2">
-                    Verify Security Code
-                  </h2>
-                  <p className="text-[hsl(var(--gov-gray))] text-sm">
-                    Enter the 6-digit code sent to {phone}
-                  </p>
-                </div>
-
                 <div>
-                  <label htmlFor="otp" className="block text-sm font-semibold text-[hsl(var(--gov-navy))] mb-4 text-center">
-                    Security Verification Code
+                  <label htmlFor="otp" className="block text-sm font-medium mb-4 text-center">
+                    Verification Code
                   </label>
                   <div className="flex justify-center">
                     <InputOTP
@@ -197,12 +195,12 @@ const Login = () => {
                       maxLength={6}
                     >
                       <InputOTPGroup>
-                        <InputOTPSlot index={0} className="w-12 h-12 text-lg border-2 border-[hsl(var(--border))]" />
-                        <InputOTPSlot index={1} className="w-12 h-12 text-lg border-2 border-[hsl(var(--border))]" />
-                        <InputOTPSlot index={2} className="w-12 h-12 text-lg border-2 border-[hsl(var(--border))]" />
-                        <InputOTPSlot index={3} className="w-12 h-12 text-lg border-2 border-[hsl(var(--border))]" />
-                        <InputOTPSlot index={4} className="w-12 h-12 text-lg border-2 border-[hsl(var(--border))]" />
-                        <InputOTPSlot index={5} className="w-12 h-12 text-lg border-2 border-[hsl(var(--border))]" />
+                        <InputOTPSlot index={0} />
+                        <InputOTPSlot index={1} />
+                        <InputOTPSlot index={2} />
+                        <InputOTPSlot index={3} />
+                        <InputOTPSlot index={4} />
+                        <InputOTPSlot index={5} />
                       </InputOTPGroup>
                     </InputOTP>
                   </div>
@@ -210,16 +208,19 @@ const Login = () => {
                 
                 <Button 
                   type="submit" 
-                  className="w-full h-12 bg-[hsl(var(--gov-navy))] hover:bg-[hsl(var(--gov-navy-dark))] text-white font-bold text-lg"
+                  variant="hero" 
+                  size="lg" 
+                  className="w-full"
                   disabled={isLoading}
                 >
-                  {isLoading ? "Verifying..." : "Verify & Access Portal"}
+                  {isLoading ? "Verifying..." : "Verify & Login"}
                 </Button>
 
                 <Button 
                   type="button"
-                  variant="outline"
-                  className="w-full h-12 border-2 border-[hsl(var(--gov-navy))] text-[hsl(var(--gov-navy))] hover:bg-[hsl(var(--gov-light-gray))] font-semibold"
+                  variant="ghost" 
+                  size="lg" 
+                  className="w-full"
                   onClick={handleBackToPhone}
                   disabled={isLoading}
                 >
@@ -229,24 +230,22 @@ const Login = () => {
               </form>
             )}
             
-            {step === 'phone' && (
-              <div className="text-center pt-6 mt-6 border-t border-[hsl(var(--border))]">
-                <p className="text-[hsl(var(--gov-gray))] text-sm">
-                  Don't have an account?{" "}
-                  <Link 
-                    to="/signup" 
-                    className="text-[hsl(var(--gov-navy))] hover:text-[hsl(var(--gov-navy-light))] font-semibold transition-colors"
-                  >
-                    Sign Up
-                  </Link>
-                </p>
-              </div>
-            )}
+            <div className="text-center pt-6 mt-6 border-t border-border">
+              <p className="text-muted-foreground">
+                Don't have an account?{" "}
+                <Link 
+                  to="/signup" 
+                  className="text-navbus-blue hover:text-navbus-blue/80 font-medium transition-colors"
+                >
+                  Sign up
+                </Link>
+              </p>
+            </div>
           </div>
         </div>
       </main>
 
-      <AuthFooter />
+      <Footer />
     </div>
   );
 };

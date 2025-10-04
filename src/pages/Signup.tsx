@@ -2,28 +2,24 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { AuthHeader } from "@/components/auth/AuthHeader";
-import { AuthFooter } from "@/components/auth/AuthFooter";
-import { PasswordStrengthMeter } from "@/components/auth/PasswordStrengthMeter";
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { UserPlus, Eye, EyeOff } from "lucide-react";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
-    fullName: "",
+    username: "",
     email: "",
-    phone: "",
     password: "",
     confirmPassword: ""
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
-  const { signUp, isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -41,10 +37,10 @@ const Signup = () => {
   };
 
   const validateForm = () => {
-    if (!formData.fullName.trim()) {
+    if (!formData.username.trim()) {
       toast({
-        title: "Full Name Required",
-        description: "Please enter your full name",
+        title: "Username Required",
+        description: "Please enter a username",
         variant: "destructive"
       });
       return false;
@@ -59,19 +55,10 @@ const Signup = () => {
       return false;
     }
 
-    if (!formData.phone.trim() || !/^\+?\d{10,15}$/.test(formData.phone)) {
-      toast({
-        title: "Invalid Phone Number",
-        description: "Please enter a valid phone number (10-15 digits)",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    if (formData.password.length < 8) {
+    if (formData.password.length < 6) {
       toast({
         title: "Password Too Short",
-        description: "Password must be at least 8 characters long",
+        description: "Password must be at least 6 characters long",
         variant: "destructive"
       });
       return false;
@@ -81,15 +68,6 @@ const Signup = () => {
       toast({
         title: "Passwords Don't Match",
         description: "Please make sure your passwords match",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    if (!agreeToTerms) {
-      toast({
-        title: "Terms & Privacy Policy",
-        description: "You must agree to the Terms & Privacy Policy to continue",
         variant: "destructive"
       });
       return false;
@@ -106,27 +84,18 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await signUp(formData.email, formData.password, {
-        full_name: formData.fullName,
-        phone_number: formData.phone
-      });
+      // For now, we'll simulate signup success and redirect to login
+      // In a real implementation, you'd call your signup API here
       
-      if (error) {
-        toast({
-          title: "Signup Failed",
-          description: error,
-          variant: "destructive"
-        });
-        return;
-      }
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
       
       toast({
-        title: "Registration Successful!",
-        description: "Your account has been created successfully."
+        title: "Account Created Successfully!",
+        description: "You can now log in with your credentials."
       });
       
       navigate('/login', { 
-        state: { message: "Registration successful. Please log in to access your account." }
+        state: { message: "Account created successfully. Please log in." }
       });
       
     } catch (error) {
@@ -141,105 +110,86 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
-      <AuthHeader />
+    <div className="min-h-screen bg-gradient-hero">
+      <Header />
       
-      <main className="flex-1 flex items-center justify-center py-12 px-4">
-        <div className="w-full max-w-md">
-          <div className="bg-white border-2 border-[hsl(var(--border))] rounded-lg shadow-lg p-8">
+      <main className="pt-24 pb-16">
+        <div className="container mx-auto px-4 flex items-center justify-center">
+          <div className="bg-gradient-card rounded-3xl p-8 shadow-navbus-large max-w-md w-full">
             <div className="text-center mb-8">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-[hsl(var(--gov-navy))] rounded-full mb-4">
-                <UserPlus className="w-8 h-8 text-white" />
+              <div className="inline-flex items-center justify-center w-16 h-16 bg-navbus-blue/10 rounded-full mb-4">
+                <UserPlus className="w-8 h-8 text-navbus-blue" />
               </div>
-              <h1 className="text-3xl font-bold text-[hsl(var(--gov-navy))] mb-2">
-                Create Your Account
-              </h1>
-              <h2 className="text-lg font-semibold text-[hsl(var(--gov-gray))] mb-2">
-                NavBus Official Portal
-              </h2>
-              <p className="text-[hsl(var(--gov-gray))] text-sm">
-                Register for secure access to transportation services
+              <h1 className="text-3xl font-bold mb-2">Create Account</h1>
+              <p className="text-muted-foreground">
+                Join NavBus to start your smart travel journey
               </p>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="fullName" className="block text-sm font-semibold text-[hsl(var(--gov-navy))] mb-2">
-                  Full Name *
+                <label htmlFor="username" className="block text-sm font-medium mb-2">
+                  Username
                 </label>
                 <Input 
-                  id="fullName"
-                  name="fullName"
+                  id="username"
+                  name="username"
                   type="text" 
-                  placeholder="Enter your full legal name" 
-                  value={formData.fullName}
+                  placeholder="Enter your username" 
+                  value={formData.username}
                   onChange={handleInputChange}
                   required 
-                  className="h-12 border-2 border-[hsl(var(--border))] focus:border-[hsl(var(--gov-navy))] focus:ring-2 focus:ring-[hsl(var(--gov-navy))]/20"
+                  className="transition-navbus focus:shadow-navbus-soft"
                 />
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-[hsl(var(--gov-navy))] mb-2">
-                  Email Address *
+                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                  Email Address
                 </label>
                 <Input 
                   id="email"
                   name="email"
                   type="email" 
-                  placeholder="Enter your email address" 
+                  placeholder="Enter your email" 
                   value={formData.email}
                   onChange={handleInputChange}
                   required 
-                  className="h-12 border-2 border-[hsl(var(--border))] focus:border-[hsl(var(--gov-navy))] focus:ring-2 focus:ring-[hsl(var(--gov-navy))]/20"
+                  className="transition-navbus focus:shadow-navbus-soft"
                 />
               </div>
 
               <div>
-                <label htmlFor="phone" className="block text-sm font-semibold text-[hsl(var(--gov-navy))] mb-2">
-                  Phone Number *
-                </label>
-                <Input 
-                  id="phone"
-                  name="phone"
-                  type="tel" 
-                  placeholder="+1 (555) 123-4567" 
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  required 
-                  className="h-12 border-2 border-[hsl(var(--border))] focus:border-[hsl(var(--gov-navy))] focus:ring-2 focus:ring-[hsl(var(--gov-navy))]/20"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-[hsl(var(--gov-navy))] mb-2">
-                  Password *
+                <label htmlFor="password" className="block text-sm font-medium mb-2">
+                  Password
                 </label>
                 <div className="relative">
                   <Input 
                     id="password"
                     name="password"
                     type={showPassword ? "text" : "password"}
-                    placeholder="Create a secure password" 
+                    placeholder="Create a password" 
                     value={formData.password}
                     onChange={handleInputChange}
                     required 
-                    className="h-12 border-2 border-[hsl(var(--border))] focus:border-[hsl(var(--gov-navy))] focus:ring-2 focus:ring-[hsl(var(--gov-navy))]/20 pr-12"
+                    className="transition-navbus focus:shadow-navbus-soft pr-10"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--gov-gray))] hover:text-[hsl(var(--gov-navy))]"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                <PasswordStrengthMeter password={formData.password} />
+                <p className="text-xs text-muted-foreground mt-1">
+                  Must be at least 6 characters long
+                </p>
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-[hsl(var(--gov-navy))] mb-2">
-                  Confirm Password *
+                <label htmlFor="confirmPassword" className="block text-sm font-medium mb-2">
+                  Confirm Password
                 </label>
                 <div className="relative">
                   <Input 
@@ -250,54 +200,36 @@ const Signup = () => {
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
                     required 
-                    className="h-12 border-2 border-[hsl(var(--border))] focus:border-[hsl(var(--gov-navy))] focus:ring-2 focus:ring-[hsl(var(--gov-navy))]/20 pr-12"
+                    className="transition-navbus focus:shadow-navbus-soft pr-10"
                   />
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--gov-gray))] hover:text-[hsl(var(--gov-navy))]"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
-                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-              </div>
-
-              <div className="flex items-start space-x-3 pt-2">
-                <Checkbox 
-                  id="terms"
-                  checked={agreeToTerms}
-                  onCheckedChange={(checked) => setAgreeToTerms(checked === true)}
-                  className="mt-1 border-2 border-[hsl(var(--gov-navy))] data-[state=checked]:bg-[hsl(var(--gov-navy))]"
-                />
-                <label htmlFor="terms" className="text-sm text-[hsl(var(--gov-gray))] leading-relaxed">
-                  I agree to the{" "}
-                  <a href="/terms" className="text-[hsl(var(--gov-navy))] hover:underline font-semibold">
-                    Terms & Conditions
-                  </a>{" "}
-                  and{" "}
-                  <a href="/privacy" className="text-[hsl(var(--gov-navy))] hover:underline font-semibold">
-                    Privacy Policy
-                  </a>
-                  <span className="text-red-500 ml-1">*</span>
-                </label>
               </div>
               
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-[hsl(var(--gov-navy))] hover:bg-[hsl(var(--gov-navy-dark))] text-white font-bold text-lg"
-                disabled={isLoading || !agreeToTerms}
+                variant="hero" 
+                size="lg" 
+                className="w-full"
+                disabled={isLoading}
               >
-                {isLoading ? "Creating Account..." : "Register Securely"}
+                {isLoading ? "Creating Account..." : "Create Account"}
               </Button>
 
-              <div className="text-center pt-6 mt-6 border-t border-[hsl(var(--border))]">
-                <p className="text-[hsl(var(--gov-gray))] text-sm">
+              <div className="text-center pt-4">
+                <p className="text-muted-foreground">
                   Already have an account?{" "}
                   <Link 
                     to="/login" 
-                    className="text-[hsl(var(--gov-navy))] hover:text-[hsl(var(--gov-navy-light))] font-semibold transition-colors"
+                    className="text-navbus-blue hover:text-navbus-blue/80 font-medium transition-colors"
                   >
-                    Sign In
+                    Log in
                   </Link>
                 </p>
               </div>
@@ -306,7 +238,7 @@ const Signup = () => {
         </div>
       </main>
 
-      <AuthFooter />
+      <Footer />
     </div>
   );
 };
