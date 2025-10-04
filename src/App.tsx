@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 
 import BusSearch from "./pages/BusSearch";
 import BusDetail from "./pages/BusDetail";
+import LiveTracking from "./pages/LiveTracking";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
             {/* Your new bus-related pages */}
             <Route path="/buses" element={<BusSearch />} />
             <Route path="/bus/:id" element={<BusDetail />} />
+            <Route path="/live-tracking" element={<LiveTracking />} />
 
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

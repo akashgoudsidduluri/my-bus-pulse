@@ -14,6 +14,74 @@ export type Database = {
   }
   public: {
     Tables: {
+      buses: {
+        Row: {
+          created_at: string | null
+          id: string
+          last_lat: number | null
+          last_lon: number | null
+          last_update: string | null
+          route_id: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          last_lat?: number | null
+          last_lon?: number | null
+          last_update?: string | null
+          route_id?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          last_lat?: number | null
+          last_lon?: number | null
+          last_update?: string | null
+          route_id?: string | null
+          vehicle_id?: string
+        }
+        Relationships: []
+      }
+      positions: {
+        Row: {
+          heading: number | null
+          id: number
+          lat: number
+          lon: number
+          speed: number | null
+          ts: string | null
+          vehicle_id: string
+        }
+        Insert: {
+          heading?: number | null
+          id?: number
+          lat: number
+          lon: number
+          speed?: number | null
+          ts?: string | null
+          vehicle_id: string
+        }
+        Update: {
+          heading?: number | null
+          id?: number
+          lat?: number
+          lon?: number
+          speed?: number | null
+          ts?: string | null
+          vehicle_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "positions_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "buses"
+            referencedColumns: ["vehicle_id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
