@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -14,6 +14,7 @@ const Login = () => {
   const [otp, setOtp] = useState("");
   const [step, setStep] = useState<'phone' | 'otp'>('phone');
   const [isLoading, setIsLoading] = useState(false);
+  const [phoneError, setPhoneError] = useState("");
   
   const { sendOtp, verifyOtp, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -38,23 +39,46 @@ const Login = () => {
     return null;
   }
 
+  const validatePhone = (value: string) => {
+    // Only allow digits
+    const digitsOnly = value.replace(/\D/g, '');
+    
+    // Limit to 10 digits
+    if (digitsOnly.length <= 10) {
+      setPhone(digitsOnly);
+      
+      // Validate with regex
+      const regex = /^[6-9][0-9]{9}$/;
+      if (digitsOnly.length === 10 && !regex.test(digitsOnly)) {
+        setPhoneError("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
+      } else if (digitsOnly.length > 0 && digitsOnly.length < 10) {
+        setPhoneError("");
+      } else if (digitsOnly.length === 10 && regex.test(digitsOnly)) {
+        setPhoneError("");
+      }
+    }
+  };
+
+  const isPhoneValid = () => {
+    const regex = /^[6-9][0-9]{9}$/;
+    return regex.test(phone);
+  };
+
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic phone validation
-    if (!phone || phone.length < 10) {
-      toast({
-        title: "Invalid Phone Number",
-        description: "Please enter a valid phone number",
-        variant: "destructive"
-      });
+    if (!isPhoneValid()) {
+      setPhoneError("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
       return;
     }
 
     setIsLoading(true);
 
+    // Prefix +91 to the phone number
+    const phoneWithCode = `+91${phone}`;
+
     try {
-      const { error } = await sendOtp(phone);
+      const { error } = await sendOtp(phoneWithCode);
 
       if (error) {
         toast({
@@ -95,7 +119,9 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await verifyOtp(phone, otp);
+      // Use phone with +91 prefix for verification
+      const phoneWithCode = `+91${phone}`;
+      const { error } = await verifyOtp(phoneWithCode, otp);
 
       if (error) {
         toast({
@@ -124,6 +150,7 @@ const Login = () => {
   const handleBackToPhone = () => {
     setStep('phone');
     setOtp("");
+    setPhoneError("");
   };
 
   return (
@@ -147,7 +174,7 @@ const Login = () => {
               <p className="text-muted-foreground">
                 {step === 'phone' 
                   ? 'We\'ll send you a verification code via SMS' 
-                  : `Enter the 6-digit code sent to ${phone}`
+                  : `Enter the 6-digit code sent to +91${phone}`
                 }
               </p>
             </div>
@@ -156,20 +183,26 @@ const Login = () => {
               <form onSubmit={handleSendOtp} className="space-y-6">
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium mb-2">
-                    Phone Number
+                    Enter your 10-digit mobile number
                   </label>
                   <Input 
                     id="phone"
                     type="tel" 
-                    placeholder="+1 (555) 123-4567" 
+                    placeholder="9876543210" 
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
+                    onChange={(e) => validatePhone(e.target.value)}
+                    maxLength={10}
                     required 
-                    className="transition-navbus focus:shadow-navbus-soft text-center text-lg"
+                    className={`transition-navbus focus:shadow-navbus-soft text-center text-lg ${phoneError ? 'border-destructive' : ''}`}
                   />
                   <p className="text-xs text-muted-foreground mt-2">
-                    Include country code (e.g., +1 for US)
+                    No need to enter +91. Just type your mobile number.
                   </p>
+                  {phoneError && (
+                    <p className="text-xs text-destructive mt-2">
+                      {phoneError}
+                    </p>
+                  )}
                 </div>
                 
                 <Button 
@@ -177,7 +210,7 @@ const Login = () => {
                   variant="hero" 
                   size="lg" 
                   className="w-full"
-                  disabled={isLoading}
+                  disabled={isLoading || !isPhoneValid()}
                 >
                   {isLoading ? "Sending..." : "Send OTP"}
                 </Button>
@@ -229,18 +262,6 @@ const Login = () => {
                 </Button>
               </form>
             )}
-            
-            <div className="text-center pt-6 mt-6 border-t border-border">
-              <p className="text-muted-foreground">
-                Don't have an account?{" "}
-                <Link 
-                  to="/signup" 
-                  className="text-navbus-blue hover:text-navbus-blue/80 font-medium transition-colors"
-                >
-                  Sign up
-                </Link>
-              </p>
-            </div>
           </div>
         </div>
       </main>
