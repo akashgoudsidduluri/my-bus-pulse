@@ -61,22 +61,7 @@ export function Hero() {
                   </Link>
                 </Button>
               </div>
-            ) : (
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Button asChild variant="hero" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
-                  <Link to="/login">
-                    <Rocket className="mr-2 h-4 h-5 w-4 sm:w-5" />
-                    Get Started
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="lg" className="text-base sm:text-lg px-6 sm:px-8 w-full sm:w-auto">
-                  <Link to="/about">
-                    Learn More
-                    <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5" />
-                  </Link>
-                </Button>
-              </div>
-            )}
+            ) : null}
             
             {/* Route Search - always visible */}
             <div className="mt-8">
