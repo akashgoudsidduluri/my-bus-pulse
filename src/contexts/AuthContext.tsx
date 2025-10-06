@@ -22,6 +22,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   sendOtp: (phone: string) => Promise<{ error: string | null }>;
   verifyOtp: (phone: string, token: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, username?: string) => Promise<{ error: string | null }>;
   logout: () => Promise<void>;
   updateProfile: (userData: Partial<Profile>) => Promise<{ error: string | null }>;
 }
@@ -124,6 +125,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signUp = async (email: string, password: string, username?: string): Promise<{ error: string | null }> => {
+    try {
+      const redirectUrl = `${window.location.origin}/`;
+      
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: redirectUrl,
+          data: {
+            username
+          }
+        }
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+
+      return { error: null };
+    } catch (error) {
+      return { error: 'An unexpected error occurred during signup' };
+    }
+  };
+
   const logout = async (): Promise<void> => {
     await supabase.auth.signOut();
   };
@@ -165,6 +191,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isAuthenticated,
       sendOtp,
       verifyOtp,
+      signUp,
       logout,
       updateProfile
     }}>

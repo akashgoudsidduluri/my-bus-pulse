@@ -18,6 +18,7 @@ import NotFound from "./pages/NotFound";
 import BusSearch from "./pages/BusSearch";
 import BusDetail from "./pages/BusDetail";
 import LiveTracking from "./pages/LiveTracking";
+import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient();
 
@@ -43,6 +44,7 @@ const App = () => (
             <Route path="/buses" element={<BusSearch />} />
             <Route path="/bus/:id" element={<BusDetail />} />
             <Route path="/live-tracking" element={<LiveTracking />} />
+            <Route path="/admin" element={<Admin />} />
 
             {/* Catch-all route */}
             <Route path="*" element={<NotFound />} />

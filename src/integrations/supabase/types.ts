@@ -44,6 +44,33 @@ export type Database = {
         }
         Relationships: []
       }
+      contact_submissions: {
+        Row: {
+          email: string
+          id: string
+          message: string
+          name: string
+          submitted_at: string
+          user_id: string | null
+        }
+        Insert: {
+          email: string
+          id?: string
+          message: string
+          name: string
+          submitted_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          submitted_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       positions: {
         Row: {
           heading: number | null
@@ -118,6 +145,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       vehicle_operators: {
         Row: {
           assigned_at: string
@@ -144,13 +192,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
       is_authorized_operator: {
         Args: { _user_id: string; _vehicle_id: string }
         Returns: boolean
       }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "operator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -277,6 +332,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "operator", "user"],
+    },
   },
 } as const

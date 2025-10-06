@@ -1,11 +1,100 @@
+import { useState } from "react";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Phone, Clock } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string()
+    .trim()
+    .min(2, "Name must be at least 2 characters")
+    .max(100, "Name must be less than 100 characters"),
+  email: z.string()
+    .trim()
+    .email("Invalid email address")
+    .max(255, "Email must be less than 255 characters"),
+  message: z.string()
+    .trim()
+    .min(10, "Message must be at least 10 characters")
+    .max(2000, "Message must be less than 2000 characters")
+});
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: ""
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    try {
+      // Validate form data
+      const validatedData = contactSchema.parse(formData);
+      
+      setIsSubmitting(true);
+
+      // Get current user (if authenticated)
+      const { data: { user } } = await supabase.auth.getUser();
+
+      // Submit to database
+      const { error } = await supabase
+        .from('contact_submissions')
+        .insert({
+          name: validatedData.name,
+          email: validatedData.email,
+          message: validatedData.message,
+          user_id: user?.id || null
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message Sent!",
+        description: "Thank you for contacting us. We'll get back to you soon."
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        message: ""
+      });
+
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        toast({
+          title: "Validation Error",
+          description: error.errors[0].message,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: "An error occurred while sending your message. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-hero">
       <Header />
@@ -75,7 +164,7 @@ export default function Contact() {
             <div className="bg-gradient-card rounded-3xl p-8 shadow-navbus-large">
               <h2 className="text-2xl font-semibold mb-6">Send us a message</h2>
               
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">
                     Your Name
@@ -84,6 +173,8 @@ export default function Contact() {
                     id="name"
                     type="text" 
                     placeholder="Enter your name" 
+                    value={formData.name}
+                    onChange={handleInputChange}
                     required 
                     className="transition-navbus focus:shadow-navbus-soft"
                   />
@@ -97,6 +188,8 @@ export default function Contact() {
                     id="email"
                     type="email" 
                     placeholder="Enter your email" 
+                    value={formData.email}
+                    onChange={handleInputChange}
                     required 
                     className="transition-navbus focus:shadow-navbus-soft"
                   />
@@ -109,6 +202,8 @@ export default function Contact() {
                   <Textarea 
                     id="message"
                     placeholder="Tell us how we can help you..." 
+                    value={formData.message}
+                    onChange={handleInputChange}
                     required 
                     rows={6}
                     className="transition-navbus focus:shadow-navbus-soft"
@@ -120,8 +215,9 @@ export default function Contact() {
                   variant="hero" 
                   size="lg" 
                   className="w-full"
+                  disabled={isSubmitting}
                 >
-                  Send Message
+                  {isSubmitting ? "Sending..." : "Send Message"}
                 </Button>
               </form>
             </div>

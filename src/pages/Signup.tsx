@@ -84,24 +84,32 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      // For now, we'll simulate signup success and redirect to login
-      // In a real implementation, you'd call your signup API here
-      
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      const { error } = await useAuth().signUp(
+        formData.email, 
+        formData.password, 
+        formData.username
+      );
+
+      if (error) {
+        toast({
+          title: "Signup Failed",
+          description: error,
+          variant: "destructive"
+        });
+        return;
+      }
       
       toast({
         title: "Account Created Successfully!",
-        description: "You can now log in with your credentials."
+        description: "Please check your email to verify your account before logging in."
       });
       
-      navigate('/login', { 
-        state: { message: "Account created successfully. Please log in." }
-      });
+      navigate('/login');
       
     } catch (error) {
       toast({
         title: "Signup Failed",
-        description: "An error occurred while creating your account. Please try again.",
+        description: "An unexpected error occurred. Please try again.",
         variant: "destructive"
       });
     } finally {
