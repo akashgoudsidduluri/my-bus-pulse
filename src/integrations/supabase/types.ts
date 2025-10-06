@@ -118,12 +118,36 @@ export type Database = {
         }
         Relationships: []
       }
+      vehicle_operators: {
+        Row: {
+          assigned_at: string
+          id: string
+          user_id: string
+          vehicle_id: string
+        }
+        Insert: {
+          assigned_at?: string
+          id?: string
+          user_id: string
+          vehicle_id: string
+        }
+        Update: {
+          assigned_at?: string
+          id?: string
+          user_id?: string
+          vehicle_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_authorized_operator: {
+        Args: { _user_id: string; _vehicle_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never

@@ -18,6 +18,9 @@ export class BusSimulator {
   async start() {
     console.log('🚌 Starting bus simulator...');
     
+    // Register current user as operator for all simulated vehicles
+    await this.registerAsOperator();
+    
     // Send initial positions
     await this.sendAllPositions();
     
@@ -25,6 +28,33 @@ export class BusSimulator {
     this.intervalId = setInterval(async () => {
       await this.sendAllPositions();
     }, 5000);
+  }
+
+  private async registerAsOperator() {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) {
+      console.error('❌ No authenticated user found');
+      throw new Error('Must be authenticated to run simulator');
+    }
+
+    console.log('📝 Registering as operator for simulated vehicles...');
+    
+    const operators = Array.from(this.buses.keys()).map(vehicleId => ({
+      user_id: user.id,
+      vehicle_id: vehicleId
+    }));
+
+    const { error } = await supabase
+      .from('vehicle_operators')
+      .upsert(operators, { onConflict: 'user_id,vehicle_id', ignoreDuplicates: true });
+
+    if (error) {
+      console.error('❌ Error registering as operator:', error);
+      throw new Error('Failed to register as vehicle operator');
+    }
+
+    console.log('✅ Registered as operator for all simulated vehicles');
   }
 
   stop() {
