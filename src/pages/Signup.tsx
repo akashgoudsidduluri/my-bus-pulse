@@ -19,7 +19,7 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, signUp } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -84,7 +84,7 @@ const Signup = () => {
     setIsLoading(true);
 
     try {
-      const { error } = await useAuth().signUp(
+      const { error } = await signUp(
         formData.email, 
         formData.password, 
         formData.username
