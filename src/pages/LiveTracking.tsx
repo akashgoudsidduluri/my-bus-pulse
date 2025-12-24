@@ -134,32 +134,26 @@ export default function LiveTracking() {
                 </Card>
               ) : (
                 buses.map((bus) => (
-                  <Card key={bus.vehicle_id} className="hover:shadow-lg transition-shadow">
+                  <Card key={bus.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader>
                       <CardTitle className="text-lg flex items-center gap-2">
                         <Navigation className="h-5 w-5 text-[hsl(var(--gov-navy))]" />
-                        {bus.vehicle_id}
+                        {bus.bus_number}
                       </CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-2">
                       <div className="flex items-center gap-2 text-sm">
                         <MapPin className="h-4 w-4 text-[hsl(var(--gov-gray))]" />
-                        <span className="text-[hsl(var(--gov-gray))]">Position:</span>
-                        <span className="font-mono">
-                          {bus.last_lat?.toFixed(6)}, {bus.last_lon?.toFixed(6)}
-                        </span>
+                        <span className="text-[hsl(var(--gov-gray))]">Route:</span>
+                        <span className="font-semibold">{bus.route_name}</span>
                       </div>
                       <div className="flex items-center gap-2 text-sm">
                         <Clock className="h-4 w-4 text-[hsl(var(--gov-gray))]" />
-                        <span className="text-[hsl(var(--gov-gray))]">Last Update:</span>
-                        <span>{formatTimestamp(bus.last_update)}</span>
+                        <span className="text-[hsl(var(--gov-gray))]">Status:</span>
+                        <span className={bus.status === 'active' ? 'text-green-600' : 'text-muted-foreground'}>
+                          {bus.status || 'Unknown'}
+                        </span>
                       </div>
-                      {bus.route_id && (
-                        <div className="text-sm">
-                          <span className="text-[hsl(var(--gov-gray))]">Route:</span>{' '}
-                          <span className="font-semibold">{bus.route_id}</span>
-                        </div>
-                      )}
                     </CardContent>
                   </Card>
                 ))

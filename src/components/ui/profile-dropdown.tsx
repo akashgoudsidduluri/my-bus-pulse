@@ -92,7 +92,7 @@ export function ProfileDropdown() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <div className="px-2 py-1.5">
-          <p className="text-sm font-medium">{user?.profile?.first_name || ''} {user?.profile?.last_name || ''}</p>
+          <p className="text-sm font-medium">{user?.profile?.full_name || ''}</p>
           <p className="text-xs text-muted-foreground">{user?.email}</p>
         </div>
         <DropdownMenuSeparator />
