@@ -13,6 +13,7 @@ export function Header() {
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/features", label: "Features" },
+    { href: "/crowd-detection", label: "Crowd AI" },
     { href: "/contact", label: "Contact" },
   ];
 
