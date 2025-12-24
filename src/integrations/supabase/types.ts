@@ -10,202 +10,20 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
-      buses: {
-        Row: {
-          created_at: string | null
-          id: string
-          last_lat: number | null
-          last_lon: number | null
-          last_update: string | null
-          route_id: string | null
-          vehicle_id: string
-        }
-        Insert: {
-          created_at?: string | null
-          id?: string
-          last_lat?: number | null
-          last_lon?: number | null
-          last_update?: string | null
-          route_id?: string | null
-          vehicle_id: string
-        }
-        Update: {
-          created_at?: string | null
-          id?: string
-          last_lat?: number | null
-          last_lon?: number | null
-          last_update?: string | null
-          route_id?: string | null
-          vehicle_id?: string
-        }
-        Relationships: []
-      }
-      contact_submissions: {
-        Row: {
-          email: string
-          id: string
-          message: string
-          name: string
-          submitted_at: string
-          user_id: string | null
-        }
-        Insert: {
-          email: string
-          id?: string
-          message: string
-          name: string
-          submitted_at?: string
-          user_id?: string | null
-        }
-        Update: {
-          email?: string
-          id?: string
-          message?: string
-          name?: string
-          submitted_at?: string
-          user_id?: string | null
-        }
-        Relationships: []
-      }
-      positions: {
-        Row: {
-          heading: number | null
-          id: number
-          lat: number
-          lon: number
-          speed: number | null
-          ts: string | null
-          vehicle_id: string
-        }
-        Insert: {
-          heading?: number | null
-          id?: number
-          lat: number
-          lon: number
-          speed?: number | null
-          ts?: string | null
-          vehicle_id: string
-        }
-        Update: {
-          heading?: number | null
-          id?: number
-          lat?: number
-          lon?: number
-          speed?: number | null
-          ts?: string | null
-          vehicle_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "positions_vehicle_id_fkey"
-            columns: ["vehicle_id"]
-            isOneToOne: false
-            referencedRelation: "buses"
-            referencedColumns: ["vehicle_id"]
-          },
-        ]
-      }
-      profiles: {
-        Row: {
-          created_at: string
-          date_of_birth: string | null
-          first_name: string | null
-          id: string
-          last_name: string | null
-          location: string | null
-          phone_number: string | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          date_of_birth?: string | null
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          location?: string | null
-          phone_number?: string | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          date_of_birth?: string | null
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          location?: string | null
-          phone_number?: string | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_roles: {
-        Row: {
-          created_at: string
-          id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
-        }
-        Relationships: []
-      }
-      vehicle_operators: {
-        Row: {
-          assigned_at: string
-          id: string
-          user_id: string
-          vehicle_id: string
-        }
-        Insert: {
-          assigned_at?: string
-          id?: string
-          user_id: string
-          vehicle_id: string
-        }
-        Update: {
-          assigned_at?: string
-          id?: string
-          user_id?: string
-          vehicle_id?: string
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _role: Database["public"]["Enums"]["app_role"]
-          _user_id: string
-        }
-        Returns: boolean
-      }
-      is_authorized_operator: {
-        Args: { _user_id: string; _vehicle_id: string }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "operator" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -332,8 +150,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "operator", "user"],
-    },
+    Enums: {},
   },
 } as const
