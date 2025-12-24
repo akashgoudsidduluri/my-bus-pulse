@@ -23,7 +23,7 @@ export function Hero() {
               {isAuthenticated ? (
                 <>
                   <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
-                    Welcome back{user?.profile?.first_name ? `, ${user.profile.first_name}` : ''}!
+                    Welcome back{user?.profile?.full_name ? `, ${user.profile.full_name.split(' ')[0]}` : ''}!
                   </h1>
                   <p className="text-lg md:text-xl text-muted-foreground max-w-2xl">
                     Ready to plan your next journey? Find real-time bus information and track your routes.

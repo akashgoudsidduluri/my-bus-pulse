@@ -54,13 +54,12 @@ export default function Contact() {
 
       // Submit to database
       const { error } = await supabase
-        .from('contact_submissions')
+        .from('contact_submissions' as any)
         .insert({
           name: validatedData.name,
           email: validatedData.email,
-          message: validatedData.message,
-          user_id: user?.id || null
-        });
+          message: validatedData.message
+        } as any);
 
       if (error) throw error;
 

@@ -22,7 +22,7 @@ interface VehicleOperator {
   id: string;
   user_id: string;
   vehicle_id: string;
-  assigned_at: string;
+  created_at: string;
 }
 
 interface UserRole {
@@ -61,7 +61,7 @@ export default function Admin() {
 
     try {
       const { data, error } = await supabase
-        .from('user_roles')
+        .from('user_roles' as any)
         .select('role')
         .eq('user_id', user.id)
         .eq('role', 'admin')
@@ -91,12 +91,12 @@ export default function Admin() {
   const loadVehicleOperators = async () => {
     try {
       const { data, error } = await supabase
-        .from('vehicle_operators')
+        .from('vehicle_operators' as any)
         .select('*')
-        .order('assigned_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setVehicleOperators(data || []);
+      setVehicleOperators((data as any[] as VehicleOperator[]) || []);
     } catch (error) {
       console.error('Error loading vehicle operators:', error);
       toast({
@@ -121,11 +121,11 @@ export default function Admin() {
 
     try {
       const { error } = await supabase
-        .from('vehicle_operators')
+        .from('vehicle_operators' as any)
         .insert({
           user_id: newAssignment.userId,
           vehicle_id: newAssignment.vehicleId
-        });
+        } as any);
 
       if (error) throw error;
 
@@ -148,7 +148,7 @@ export default function Admin() {
   const handleRemoveAssignment = async (id: string) => {
     try {
       const { error } = await supabase
-        .from('vehicle_operators')
+        .from('vehicle_operators' as any)
         .delete()
         .eq('id', id);
 
@@ -286,7 +286,7 @@ export default function Admin() {
                               {assignment.vehicle_id}
                             </TableCell>
                             <TableCell>
-                              {new Date(assignment.assigned_at).toLocaleString()}
+                              {new Date(assignment.created_at).toLocaleString()}
                             </TableCell>
                             <TableCell className="text-right">
                               <Button

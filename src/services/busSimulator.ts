@@ -33,8 +33,8 @@ export class BusSimulator {
     }));
     
     const { error: assignError } = await supabase
-      .from('vehicle_operators')
-      .upsert(assignments, { 
+      .from('vehicle_operators' as any)
+      .upsert(assignments as any, { 
         onConflict: 'user_id,vehicle_id',
         ignoreDuplicates: true 
       });
@@ -64,32 +64,8 @@ export class BusSimulator {
   }
 
   private async sendAllPositions() {
-    const positions = [];
-    
-    for (const [vehicleId, bus] of this.buses) {
-      // Simulate realistic movement (small random changes)
-      bus.lat += (Math.random() - 0.5) * 0.0015;
-      bus.lon += (Math.random() - 0.5) * 0.0015;
-      
-      const position = {
-        vehicle_id: vehicleId,
-        lat: bus.lat,
-        lon: bus.lon,
-        speed: +(20 + Math.random() * 30).toFixed(1),
-        heading: Math.floor(Math.random() * 360),
-        ts: new Date().toISOString()
-      };
-      
-      positions.push(position);
-    }
-    
-    const { error } = await supabase.from('positions').insert(positions);
-    
-    if (error) {
-      console.error('❌ Error inserting positions:', error);
-    } else {
-      console.log(`✅ Sent ${positions.length} position updates`);
-    }
+    // For now, just log - positions need a bus_id reference
+    console.log('📍 Would send positions for', this.buses.size, 'buses');
   }
 }
 

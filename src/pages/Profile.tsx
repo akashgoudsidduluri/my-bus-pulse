@@ -42,12 +42,12 @@ const Profile = () => {
   
   // User data from Supabase profile
   const [userData, setUserData] = useState({
-    firstName: user?.profile?.first_name || '',
-    surname: user?.profile?.last_name || '',
-    dateOfBirth: user?.profile?.date_of_birth || '',
-    location: user?.profile?.location || '',
-    contactNumber: user?.profile?.phone_number || '',
-    phoneNumber: user?.profile?.phone_number || '',
+    firstName: user?.profile?.full_name?.split(' ')[0] || '',
+    surname: user?.profile?.full_name?.split(' ').slice(1).join(' ') || '',
+    dateOfBirth: '',
+    location: '',
+    contactNumber: '',
+    phoneNumber: '',
     email: user?.email || ''
   });
 
@@ -77,12 +77,12 @@ const Profile = () => {
     setUserData(prev => ({ ...prev, [field]: value }));
     
     // Update profile in database
-    const profileData: any = {};
-    if (field === 'firstName') profileData.first_name = value;
-    else if (field === 'surname') profileData.last_name = value;
-    else if (field === 'dateOfBirth') profileData.date_of_birth = value;
-    else if (field === 'location') profileData.location = value;
-    else if (field === 'contactNumber' || field === 'phoneNumber') profileData.phone_number = value;
+    const profileData: { full_name?: string } = {};
+    if (field === 'firstName' || field === 'surname') {
+      const firstName = field === 'firstName' ? value : userData.firstName;
+      const surname = field === 'surname' ? value : userData.surname;
+      profileData.full_name = `${firstName} ${surname}`.trim();
+    }
     
     if (Object.keys(profileData).length > 0) {
       await updateProfile(profileData);
